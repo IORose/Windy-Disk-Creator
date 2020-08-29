@@ -46,7 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet var window: NSWindow!
     @IBOutlet weak var ISOPickerInput: NSTextField!
     var externalPartitions = [String]()
-    
+    let wimlibPath = "\(String(Bundle.main.executablePath!).dropLast(24))Resources/wimlib"
     func alert(message: String){
         /*
          Функция для создания Alert-диалога, предупреждающего о неверной введенной
@@ -137,6 +137,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
     }
     
+    @IBOutlet weak var StartButton: NSButton!
+    @IBOutlet weak var DebugButton: NSButton!
+    @IBOutlet weak var UpdateButton: NSButton!
+    @IBOutlet weak var ChooseButton: NSButton!
+    @IBOutlet weak var ProgressBar: NSProgressIndicator!
+    
     @IBAction func checkInputInfo(_ sender: Any) {
         /*
          Функция, проверяющая правильность введенной информации
@@ -169,6 +175,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 /*
                  Проверка данных успешна. Приступаем к созданию загрузочного раздела.
                  */
+                ChooseButton.isEnabled = false
+                UpdateButton.isEnabled = false
+                StartButton.isEnabled = false
+                DebugButton.isEnabled = false
+                partitionPickerListVar.isEnabled = false
+                isoPath.isEnabled = false
+                ProgressBar.minValue = 0
+                ProgressBar.maxValue = 100
+                
+                ProgressBar.doubleValue = 5
                 startDiskCreating(windowsISO: isoPath.stringValue, partition: partitionPickerListVar.title)
             } else {
                 alert(message: "Selected \"\(isoPath.stringValue)\" does not exist.")
@@ -181,13 +197,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         /*
          Функция, не несущая смысла для пользователя. Отладочная информация и "полигон испытаний"
          */
+        DispatchQueue.global(qos: .background).async { [self] in
+            /*   sleep(5)
+             DispatchQueue.main.async {
+             ProgressBar.doubleValue = 100
+             }
+             sleep(5)*/
+        }
         
         
         // print(shell("/Users/winterboard/Desktop/wimlib/wimlib-imagex"))
+        //print(wimlibPath)
         
-        
-        
-    
+        //  ProgressBar.doubleValue = 80
     }
     
     
@@ -210,7 +232,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          Функция, с которой начинается создание загрузочного раздела.
          */
         let volumeUDID = String(shell("diskutil info \"/Volumes/\(partition)\" | grep 'Volume UUID:'").dropFirst(30))
-        
+        ProgressBar.doubleValue = 8
         
         let randomPartitionName = ("WINDY_\(randomString(length: 5))")
         /*
@@ -221,10 +243,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         
         formatPartition(volumeUDID, newPartitionName: randomPartitionName)
-        
+        ProgressBar.doubleValue = 14
         print("[DEBUG] > Mounting Windows in Finder")
         var hdiutilMountPath = shell("hdiutil attach \"\(windowsISO)\"  -mountroot /Volumes/ -readonly")
-        
+        ProgressBar.doubleValue = 25
         if let range = hdiutilMountPath.range(of: "/Volumes/") {
             hdiutilMountPath = String(hdiutilMountPath.dropFirst(hdiutilMountPath.distance(from: hdiutilMountPath.startIndex, to: range.lowerBound)))
         }
@@ -234,22 +256,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         print(hdiutilMountPath)
         
         print("[DEBUG] > Starting resources copying to Destination partition /Volumes/\(randomPartitionName)")
-        
-        print(shell("rsync -av --exclude='sources/install.wim' \"\(hdiutilMountPath)/\" /Volumes/\(randomPartitionName)"))
-        
-        
-        let fileSize = getFileSize(path: "\(hdiutilMountPath)/sources/install.wim") / 1024 / 1024
-        if(fileSize > 4000){
-            print("[DEBUG] > File is too large (\(fileSize)MB) and needs to be splitted into parts.")
-            print("[DUBUG] > Starting splitting (and copying)")
-            print(shell("/Users/winterboard/Desktop/wimlib/wimlib-imagex split \"\(hdiutilMountPath)/sources/install.wim\" /Volumes/\(randomPartitionName)/sources/install.swm  \(fileSize/2) --include-integrity"))
+        DispatchQueue.global(qos: .background).async { [self] in
+            /*   sleep(5)
+             DispatchQueue.main.async {
+             ProgressBar.doubleValue = 100
+             }
+             sleep(5)*/
+            DispatchQueue.main.async {
+            ProgressBar.doubleValue = 50
+            }
+            
+            print(shell("rsync -av --exclude='sources/install.wim' \"\(hdiutilMountPath)/\" /Volumes/\(randomPartitionName)"))
+            
+            DispatchQueue.main.async {
+            ProgressBar.doubleValue = 70
+            }
+            let fileSize = getFileSize(path: "\(hdiutilMountPath)/sources/install.wim") / 1024 / 1024
+            if(fileSize > 4000){
+                print("[DEBUG] > File is too large (\(fileSize)MB) and needs to be splitted into parts.")
+                print("[DUBUG] > Starting splitting (and copying)")
+                print(shell("\"\(wimlibPath)/wimlib-imagex\" split \"\(hdiutilMountPath)/sources/install.wim\" \"/Volumes/\(randomPartitionName)/sources/install.swm\"  \(fileSize/2) --include-integrity"))
+            }
+            else {
+                print("[DEBUG] >  File size is less than 4000MB (\(fileSize)). Don't need to split install.wim.")
+                print("[DEBUG] > Copying unmodified install.wim")
+                print(shell("rsync -av \"\(hdiutilMountPath)/sources/install.wim\" /Volumes/\(randomPartitionName)/sources/"))
+            }
+            ProgressBar.doubleValue = 100
+            StartButton.title = "DONE!"
         }
-        else {
-            print("[DEBUG] >  File size is less than 4000MB (\(fileSize)). Don't need to split install.wim.")
-            print("[DEBUG] > Copying unmodified install.wim")
-            print(shell("rsync -av \"\(hdiutilMountPath)/sources/install.wim\" /Volumes/\(randomPartitionName)/sources/"))
-        }
-        
+       
     }
     
 }
