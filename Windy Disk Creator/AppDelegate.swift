@@ -180,7 +180,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 isoPath.isEnabled = false
                 ProgressBar.minValue = 0
                 ProgressBar.maxValue = 100
-                
                 ProgressBar.doubleValue = 5
                 startDiskCreating(windowsISO: isoPath.stringValue, partition: partitionPickerListVar.title)
             } else {
@@ -241,7 +240,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 ProgressBar.doubleValue = 50
             }
             /*
-             Копированеи ресурсов установщика без install.wim, т.к. его размер может быть более 4GB
+             Копирование ресурсов установщика без install.wim, т.к. его размер может быть более 4GB
              */
             print(shell("rsync -av --exclude='sources/install.wim' \"\(hdiutilMountPath)/\" /Volumes/\(randomPartitionName)"))
             
