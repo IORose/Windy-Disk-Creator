@@ -11,18 +11,19 @@ func shell(_ command: String) -> String {
     //Функция для вызова шелла. (Для выполнения терминальных команд)
     let task = Process()
     let pipe = Pipe()
-    
     task.standardOutput = pipe
     task.arguments = ["-c", command]
     task.launchPath = "/bin/bash"
     task.launch()
-    
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
     let output = String(data: data, encoding: .utf8)!
-    
     return output
 }
 func getFileSize(path : String) -> UInt64{
+    /*
+     Функция для получения размера файла. В нашем случае проверка идет на install.wim,
+     который может быть более 4GB (лимит FAT32)
+     */
     do {
         return  (try FileManager.default.attributesOfItem(atPath: path) as NSDictionary).fileSize()
     } catch {
@@ -117,8 +118,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 if(rawDiskUtil).contains("<string>/Volumes/\(unfilteredSinglePartition)</string>"){
                     externalPartitions.append(unfilteredSinglePartition)
                 }
-                
-                
             }
             print("[DEBUG] > External Partitions: \(externalPartitions)")
             
@@ -193,25 +192,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    @IBAction func DebugButtonAction(_ sender: Any) {
-        /*
-         Функция, не несущая смысла для пользователя. Отладочная информация и "полигон испытаний"
-         */
-        DispatchQueue.global(qos: .background).async { [self] in
-            /*   sleep(5)
-             DispatchQueue.main.async {
-             ProgressBar.doubleValue = 100
-             }
-             sleep(5)*/
-        }
-        
-        
-        // print(shell("/Users/winterboard/Desktop/wimlib/wimlib-imagex"))
-        //print(wimlibPath)
-        
-        //  ProgressBar.doubleValue = 80
-    }
-    
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
     }
@@ -236,15 +216,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         let randomPartitionName = ("WINDY_\(randomString(length: 5))")
         /*
-         Форматирование раздела с выбранными параметрами. (ВРЕМЕННО ОТКЛЮЧЕНО ДЛЯ УМЕНЬШЕНИЯ ИЗНОСА НАКОПИТЕЛЯ)
-         
-         //
+         Форматирование раздела с выбранными параметрами.
          */
-        
-        
         formatPartition(volumeUDID, newPartitionName: randomPartitionName)
         ProgressBar.doubleValue = 14
         print("[DEBUG] > Mounting Windows in Finder")
+        /*
+         Монтирование образа Windows.iso в /Volumes/
+         */
         var hdiutilMountPath = shell("hdiutil attach \"\(windowsISO)\"  -mountroot /Volumes/ -readonly")
         ProgressBar.doubleValue = 25
         if let range = hdiutilMountPath.range(of: "/Volumes/") {
@@ -254,23 +233,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         hdiutilMountPath = String(hdiutilMountPath.dropLast())
         
         print(hdiutilMountPath)
-        
+         /*
+         Копирование ресурсов установщика на раздел FAT32
+         */
         print("[DEBUG] > Starting resources copying to Destination partition /Volumes/\(randomPartitionName)")
         DispatchQueue.global(qos: .background).async { [self] in
-            /*   sleep(5)
-             DispatchQueue.main.async {
-             ProgressBar.doubleValue = 100
-             }
-             sleep(5)*/
+    
             DispatchQueue.main.async {
-            ProgressBar.doubleValue = 50
+                ProgressBar.doubleValue = 50
             }
-            
+            /*
+             Копированеи ресурсов установщика без install.wim, т.к. его размер может быть более 4GB
+             */
             print(shell("rsync -av --exclude='sources/install.wim' \"\(hdiutilMountPath)/\" /Volumes/\(randomPartitionName)"))
             
             DispatchQueue.main.async {
-            ProgressBar.doubleValue = 70
+                ProgressBar.doubleValue = 70
             }
+            /*
+             Проверка Install.wim на размер и его копирование (если размер более 4GB, то будет произведено разделение
+             install.wim на части)
+             */
             let fileSize = getFileSize(path: "\(hdiutilMountPath)/sources/install.wim") / 1024 / 1024
             if(fileSize > 4000){
                 print("[DEBUG] > File is too large (\(fileSize)MB) and needs to be splitted into parts.")
@@ -285,7 +268,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             ProgressBar.doubleValue = 100
             StartButton.title = "DONE!"
         }
-       
+        
     }
     
 }

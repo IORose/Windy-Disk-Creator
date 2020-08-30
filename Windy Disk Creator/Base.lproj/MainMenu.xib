@@ -15,7 +15,6 @@
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Windy_Disk_Creator" customModuleProvider="target">
             <connections>
                 <outlet property="ChooseButton" destination="5lQ-wz-d2S" id="OeR-Az-1b1"/>
-                <outlet property="DebugButton" destination="JDD-JM-UDk" id="NVi-Rh-E9n"/>
                 <outlet property="ISOPickerInput" destination="ACQ-wz-mmm" id="izj-Ox-0Ar"/>
                 <outlet property="ProgressBar" destination="UQ8-Rb-Wth" id="YzX-J9-Fue"/>
                 <outlet property="StartButton" destination="lwG-e5-T3j" id="zeU-ab-x6H"/>
@@ -107,17 +106,6 @@
                             </connections>
                         </popUpButtonCell>
                     </popUpButton>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JDD-JM-UDk">
-                        <rect key="frame" x="196" y="13" width="88" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="[DEBUG]" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LSE-GW-nfT">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="DebugButtonAction:" target="Voe-Tx-rLC" id="UfC-iH-zyf"/>
-                        </connections>
-                    </button>
                     <progressIndicator fixedFrame="YES" maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="UQ8-Rb-Wth">
                         <rect key="frame" x="20" y="112" width="440" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
