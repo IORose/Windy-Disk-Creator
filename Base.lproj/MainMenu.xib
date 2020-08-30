@@ -14,7 +14,12 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Windy_Disk_Creator" customModuleProvider="target">
             <connections>
+                <outlet property="ChooseButton" destination="5lQ-wz-d2S" id="OeR-Az-1b1"/>
                 <outlet property="ISOPickerInput" destination="ACQ-wz-mmm" id="izj-Ox-0Ar"/>
+                <outlet property="ProgressBar" destination="UQ8-Rb-Wth" id="YzX-J9-Fue"/>
+                <outlet property="StartButton" destination="lwG-e5-T3j" id="zeU-ab-x6H"/>
+                <outlet property="UpdateButton" destination="seS-sP-K5K" id="nea-fG-D7M"/>
+                <outlet property="WindyView" destination="EiT-Mj-1SZ" id="f5Q-iv-4zC"/>
                 <outlet property="isoPath" destination="ACQ-wz-mmm" id="HJf-aG-GxC"/>
                 <outlet property="partitionPickerListVar" destination="oa0-RG-MNj" id="lcH-zd-nxS"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
@@ -90,7 +95,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="Click the &quot;Update&quot; button first" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" enabled="NO" state="on" borderStyle="border" inset="2" pullsDown="YES" id="oa0-RG-MNj">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
+                            <font key="font" metaFont="menu"/>
                             <menu key="menu" id="05Y-En-mnS">
                                 <items>
                                     <menuItem title="Click the &quot;Update&quot; button first" state="on" hidden="YES" id="dOb-FS-PL5"/>
@@ -101,8 +106,12 @@
                             </connections>
                         </popUpButtonCell>
                     </popUpButton>
+                    <progressIndicator fixedFrame="YES" maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="UQ8-Rb-Wth">
+                        <rect key="frame" x="20" y="112" width="440" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    </progressIndicator>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lwG-e5-T3j">
-                        <rect key="frame" x="196" y="206" width="88" height="32"/>
+                        <rect key="frame" x="196" y="175" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="START" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mUq-Q1-Mzi">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -110,17 +119,6 @@
                         </buttonCell>
                         <connections>
                             <action selector="checkInputInfo:" target="Voe-Tx-rLC" id="dW2-zq-z2l"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JDD-JM-UDk">
-                        <rect key="frame" x="6" y="13" width="102" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="[DEBUG]" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LSE-GW-nfT">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="DebugButtonAction:" target="Voe-Tx-rLC" id="UfC-iH-zyf"/>
                         </connections>
                     </button>
                 </subviews>
