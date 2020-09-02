@@ -47,7 +47,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet var window: NSWindow!
     @IBOutlet weak var ISOPickerInput: NSTextField!
     var externalPartitions = [String]()
-    let wimlibPath = "\(String(Bundle.main.executablePath!).dropLast(24))Resources/wimlib"
+    let wimlibPath = "\(String(Bundle.main.executablePath!).dropLast(24))Resources/.libs"
     func alert(message: String){
         /*
          Функция для создания Alert-диалога, предупреждающего о неверной введенной

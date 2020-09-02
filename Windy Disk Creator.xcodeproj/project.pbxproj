@@ -7,20 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D64D677224FC365C009C43E5 /* wimlib in Resources */ = {isa = PBXBuildFile; fileRef = D64D677124FC365C009C43E5 /* wimlib */; };
+		D649118924FFCACB00426BEB /* .libs in Resources */ = {isa = PBXBuildFile; fileRef = D649118824FFCACB00426BEB /* .libs */; };
 		D661D04D24F870370023BA89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D661D04C24F870370023BA89 /* AppDelegate.swift */; };
 		D661D04F24F870390023BA89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D661D04E24F870390023BA89 /* Assets.xcassets */; };
 		D661D05224F870390023BA89 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D661D05024F870390023BA89 /* MainMenu.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D64D677124FC365C009C43E5 /* wimlib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = wimlib; path = "Windy Disk Creator/wimlib"; sourceTree = "<group>"; };
+		D649118824FFCACB00426BEB /* .libs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = .libs; path = "Windy Disk Creator/.libs"; sourceTree = "<group>"; };
 		D661D04924F870370023BA89 /* Windy Disk Creator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Windy Disk Creator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D661D04C24F870370023BA89 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D661D04E24F870390023BA89 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D661D05124F870390023BA89 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		D661D05324F870390023BA89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D661D05424F870390023BA89 /* Windy_Disk_Creator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Windy_Disk_Creator.entitlements; sourceTree = "<group>"; };
+		D6A7F9CF24FFBE0F00B4A29E /* libwim.15.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libwim.15.dylib; path = "Windy Disk Creator/wimlib/.libs/libwim.15.dylib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,9 +38,10 @@
 		D661D04024F870370023BA89 = {
 			isa = PBXGroup;
 			children = (
-				D64D677124FC365C009C43E5 /* wimlib */,
+				D649118824FFCACB00426BEB /* .libs */,
 				D661D04B24F870370023BA89 /* Windy Disk Creator */,
 				D661D04A24F870370023BA89 /* Products */,
+				D6A7F9CE24FFBE0E00B4A29E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -61,6 +63,14 @@
 				D661D05424F870390023BA89 /* Windy_Disk_Creator.entitlements */,
 			);
 			path = "Windy Disk Creator";
+			sourceTree = "<group>";
+		};
+		D6A7F9CE24FFBE0E00B4A29E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D6A7F9CF24FFBE0F00B4A29E /* libwim.15.dylib */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -120,7 +130,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D64D677224FC365C009C43E5 /* wimlib in Resources */,
+				D649118924FFCACB00426BEB /* .libs in Resources */,
 				D661D04F24F870390023BA89 /* Assets.xcassets in Resources */,
 				D661D05224F870390023BA89 /* MainMenu.xib in Resources */,
 			);
@@ -279,6 +289,10 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Windy\\ Disk\\ Creator/wimlib/.libs",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.IORose.Windy-Disk-Creator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -297,6 +311,10 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Windy\\ Disk\\ Creator/wimlib/.libs",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.IORose.Windy-Disk-Creator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
