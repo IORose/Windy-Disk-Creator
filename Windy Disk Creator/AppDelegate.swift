@@ -7,18 +7,7 @@
 
 import Cocoa
 
-func shell(_ command: String) -> String {
-    //Функция для вызова шелла. (Для выполнения терминальных команд)
-    let task = Process()
-    let pipe = Pipe()
-    task.standardOutput = pipe
-    task.arguments = ["-c", command]
-    task.launchPath = "/bin/bash"
-    task.launch()
-    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    let output = String(data: data, encoding: .utf8)!
-    return output
-}
+
 
 func getFileSize(path : String) -> UInt64{
     /*
@@ -46,6 +35,23 @@ func randomString(length: Int) -> String {
 }
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
+
+    var someInts = [Int32]()
+
+    func shell(_ command: String) -> String {
+        //Функция для вызова шелла. (Для выполнения терминальных команд)
+        let task = Process()
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.arguments = ["-c", command]
+        task.launchPath = "/bin/bash"
+        task.launch()
+        someInts.append(task.processIdentifier)
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8)!
+        return output
+        
+    }
     
     @IBOutlet weak var isoPathTextField: NSTextField!
     @IBOutlet weak var partitionPickerListPopUpButton: NSPopUpButtonCell!
@@ -56,7 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var ProgressBar: NSProgressIndicator!
     @IBOutlet weak var ShowOnlyExternalPartitionsCheckBox: NSButton!
     
-    
+    var isPreparingToKillShells = false
     let filePickerWindowsISO = NSOpenPanel()
     var partitionsArray = [String]()
     let wimlibPath = "\(String(Bundle.main.executablePath!).dropLast(24))Resources/.libs"
@@ -78,10 +84,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         alert.alertStyle = .critical
         alert.runModal()
     }
+    
+    @IBAction func DebugButton(_ sender: Any) {
+        stopBackgroundTransfering()
+    }
+    
     @IBAction func ISOPickerButton(_ sender: Any) {
         /*
          Функция создания и вызова диалога выбора файлов с указанными ниже параметрами.
          */
+        DispatchQueue.main.async { [self] in
+
         filePickerWindowsISO.title                   = "Choose a Windows 10 ISO"
         filePickerWindowsISO.showsResizeIndicator    = false
         filePickerWindowsISO.showsHiddenFiles        = false
@@ -102,6 +115,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // User clicked on "Cancel"
             return
         }
+    }
     }
     
     func setGUIEnabledState(_ state : Bool)  {
@@ -222,9 +236,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    
+    func stopBackgroundTransfering() {
+        for pid in someInts{
+            shell("kill -9 \(pid)")
+        }
+        someInts.removeAll()
+        isPreparingToKillShells = true
+    }
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        
+      
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -242,12 +262,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         /*
          Функция, с которой начинается создание загрузочного раздела.
          */
+        DispatchQueue.global(qos: .background).async {  [self] in
+setProgress(1)
         let volumeUDID = String(shell("diskutil info \"/Volumes/\(partition)\" | grep 'Volume UUID:'").dropFirst(30))
-        
+    setProgress(3)
         var hdiutilMountPath = shell("hdiutil attach \"\(windowsISO)\"  -mountroot /Volumes/ -readonly")
         if (!hdiutilMountPath.isEmpty) {
             print("[DEBUG] > Image was mounted successfully.")
-            ProgressBar.doubleValue = 25
+            setProgress(6)
             if let range = hdiutilMountPath.range(of: "/Volumes/") {
                 hdiutilMountPath = String(hdiutilMountPath.dropFirst(hdiutilMountPath.distance(from: hdiutilMountPath.startIndex, to: range.lowerBound)))
             }
@@ -264,14 +286,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         hdiutilMountPath = String(hdiutilMountPath.dropLast())
         
-        ProgressBar.doubleValue = 8
+        setProgress(8)
         
         let randomPartitionName = ("WINDY_\(randomString(length: 5))")
         /*
          Форматирование раздела с выбранными параметрами.
          */
         formatPartition(volumeUDID, newPartitionName: randomPartitionName)
-        ProgressBar.doubleValue = 14
+        setProgress(14)
         print("[DEBUG] > Mounting Windows in Finder")
         /*
          Монтирование образа Windows.iso в /Volumes/
@@ -283,8 +305,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          Копирование ресурсов установщика на раздел FAT32
          */
         print("[DEBUG] > Starting resources copying to Destination partition /Volumes/\(randomPartitionName)")
-        DispatchQueue.global(qos: .background).async {  [self] in
-            
+            if (!isPreparingToKillShells){
             setProgress(50)
             /*
              Копирование ресурсов установщика без install.wim, т.к. его размер может быть более 4GB
@@ -292,11 +313,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print(shell("rsync -av --exclude='sources/install.wim' \"\(hdiutilMountPath)/\" /Volumes/\(randomPartitionName)"))
             
             setProgress(70)
-            
+            }
+            else{
+                return
+            }
             /*
              Проверка Install.wim на размер и его копирование (если размер более 4GB, то будет произведено разделение
              install.wim на части)
              */
+            if (!isPreparingToKillShells){
             let installWimSize = getFileSize(path: "\(hdiutilMountPath)/sources/install.wim") / 1024 / 1024
             if(installWimSize > 4000){
                 print("[DEBUG] > File is too large (\(installWimSize)MB) and needs to be splitted into parts.")
@@ -308,8 +333,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 print("[DEBUG] > Copying unmodified install.wim")
                 print(shell("rsync -av \"\(hdiutilMountPath)/sources/install.wim\" /Volumes/\(randomPartitionName)/sources/"))
             }
+                
+            }
             setProgress(100)
+            DispatchQueue.main.async {
             StartButton.title = "DONE!"
+            }
         }
         
     }
