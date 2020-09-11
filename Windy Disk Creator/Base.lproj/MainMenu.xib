@@ -15,6 +15,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Windy_Disk_Creator" customModuleProvider="target">
             <connections>
+                <outlet property="CancelButton" destination="7FD-JO-Erx" id="R5I-5p-DPV"/>
                 <outlet property="ChooseButton" destination="5lQ-wz-d2S" id="OeR-Az-1b1"/>
                 <outlet property="ISOPickerInput" destination="ACQ-wz-mmm" id="izj-Ox-0Ar"/>
                 <outlet property="ProgressBar" destination="UQ8-Rb-Wth" id="YzX-J9-Fue"/>
@@ -24,7 +25,7 @@
                 <outlet property="WindyView" destination="EiT-Mj-1SZ" id="f5Q-iv-4zC"/>
                 <outlet property="isoPathTextField" destination="ACQ-wz-mmm" id="HJf-aG-GxC"/>
                 <outlet property="partitionPickerListPopUpButton" destination="oa0-RG-MNj" id="lcH-zd-nxS"/>
-                <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
+                <outlet property="window" destination="QvC-M9-y7g" id="6UX-kI-NXG"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
@@ -131,15 +132,15 @@
                         <rect key="frame" x="20" y="53" width="440" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </progressIndicator>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7FD-JO-Erx">
-                        <rect key="frame" x="28" y="19" width="65" height="19"/>
+                    <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7FD-JO-Erx">
+                        <rect key="frame" x="152" y="13" width="176" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="roundRect" title="[DEBUG]" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GwX-OO-u2n">
+                        <buttonCell key="cell" type="push" title="[CANCEL]" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GwX-OO-u2n">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="cellTitle"/>
+                            <font key="font" metaFont="system"/>
                         </buttonCell>
                         <connections>
-                            <action selector="DebugButton:" target="Voe-Tx-rLC" id="85G-zr-s5h"/>
+                            <action selector="OnClickCancelButton:" target="Voe-Tx-rLC" id="85G-zr-s5h"/>
                         </connections>
                     </button>
                 </subviews>

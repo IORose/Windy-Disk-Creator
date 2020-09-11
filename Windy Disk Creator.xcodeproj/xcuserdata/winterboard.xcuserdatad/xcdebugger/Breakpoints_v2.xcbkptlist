@@ -14,10 +14,10 @@
             filePath = "Windy Disk Creator/AppDelegate.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "269"
-            endingLineNumber = "269"
+            startingLineNumber = "302"
+            endingLineNumber = "302"
             landmarkName = "startDiskCreating(windowsISO:partition:)"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
