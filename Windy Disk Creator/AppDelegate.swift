@@ -38,12 +38,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     var isPreparingToKillShells = false
     let filePickerWindowsISO = NSOpenPanel()
-    var partitionsArray = [String]()
     let wimlibPath = "\(String(Bundle.main.executablePath!).dropLast(24))Resources/.libs"
     var pidList = [Int32]()
     
     @IBOutlet weak var isoPathTextField: NSTextField!
-    @IBOutlet weak var partitionPickerListPopUpButton: NSPopUpButtonCell!
+ //   @IBOutlet weak var partitionPickerListPopUpButton: NSPopUpButtonCell!
     @IBOutlet weak var ISOPickerInput: NSTextField!
     @IBOutlet weak var StartButton: NSButton!
     @IBOutlet weak var UpdateButton: NSButton!
@@ -53,14 +52,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var CancelButton: NSButton!
     
+    @IBOutlet weak var pickReborn: NSPopUpButton!
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-
+        
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
         
     }
     
+    @discardableResult
     func shell(_ command: String) -> String {
         /* Функция для вызова шелла.
          (Для выполнения терминальных команд) */
@@ -76,7 +77,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return output
         
     }
-    
+    func cancelButtonHiddenState(_ state : Bool) {
+        DispatchQueue.main.async { [self] in
+            CancelButton.isHidden = state
+        }
+    }
     func setProgress(_ progress : Double){
         /* Функция для изменения прогресса ProgressBar*/
         DispatchQueue.main.async {
@@ -89,13 +94,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          Функция для создания Alert-диалога, предупреждающего о неверной введенной
          информации.
          */
-        DispatchQueue.main.async { [self] in
-
-        let alert = NSAlert()
-        alert.addButton(withTitle: "Close")
-        alert.messageText = message
-        alert.alertStyle = .critical
-        alert.runModal()
+        DispatchQueue.main.async {
+            let alert = NSAlert()
+            alert.addButton(withTitle: "Close")
+            alert.messageText = message
+            alert.alertStyle = .critical
+            alert.runModal()
         }
     }
     
@@ -126,7 +130,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
                 
             } else {
-                // User clicked on "Cancel"
+               // Пользователь нажал на "Отмена"
                 return
             }
         }
@@ -138,43 +142,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          */
         DispatchQueue.main.async { [self] in
             
-        ChooseButton.isEnabled = state
-        UpdateButton.isEnabled = state
-        StartButton.isEnabled = state
-        partitionPickerListPopUpButton.isEnabled = state
-        isoPathTextField.isEnabled = state
-        ShowOnlyExternalPartitionsCheckBox.isEnabled = state
-        window!.standardWindowButton(.closeButton)!.isEnabled = state
-        state ? (CancelButton.isHidden = false) : (CancelButton.isHidden = true)
-           
-        
+            ChooseButton.isEnabled = state
+            UpdateButton.isEnabled = state
+            StartButton.isEnabled = state
+            pickReborn.isEnabled = state
+            isoPathTextField.isEnabled = state
+            ShowOnlyExternalPartitionsCheckBox.isEnabled = state
+            window!.standardWindowButton(.closeButton)!.isEnabled = state
+            
         }
     }
     
-    @IBAction func onClickPartitionPickerList(_ sender: Any) {
-        /*
-         Функция, применяющая заголовок пикеру разделов.
-         Использование обязательно, т.к. в Swift без неё не будет заголовка
-         выбранного элемента.
-         */
-        partitionPickerListPopUpButton.setTitle(partitionPickerListPopUpButton.titleOfSelectedItem)
-        
-    }
     
     @IBAction func OnClickExternalPartitionsPickerUpdateButton(_ sender: Any) {
         /*
          Функция, выполняющаяся по нажатию на кнопку "Update" в выборе разделов.
          Неоюходима для поиска внешних смонтированных разделов на компьютере Mac.
          */
-        
-        for partition in partitionsArray{
-            print("[DEBUG] > Removing (\(partition)) partition from picker.")
-            partitionPickerListPopUpButton.removeItem(withTitle: partition)
-            
-        }
-        partitionsArray.removeAll()
-        
-        do {
+        pickReborn.removeAllItems()
+             do {
             /*
              Получение списка смонтированных разделов в каталоге /Volumes
              */
@@ -196,24 +182,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print(unfilteredPartitionsArray)
             for unfilteredSinglePartition in unfilteredPartitionsArray{
                 if(rawDiskUtilOutput).contains("<string>/Volumes/\(unfilteredSinglePartition)</string>"){
-                    partitionsArray.append(unfilteredSinglePartition)
+                    pickReborn.addItem(withTitle: unfilteredSinglePartition)
+                    print("[DEBUG] > Adding (\(unfilteredSinglePartition)) partition to picker.")
                 }
                 
                 
             }
-            print("[DEBUG] > External Partitions: \(partitionsArray)")
             
         } catch {
             print("[ERROR] > Something went wrong: \(error)")
         }
-        if (!partitionsArray.isEmpty) {
-            partitionPickerListPopUpButton.isEnabled = true
-            partitionPickerListPopUpButton.addItems(withTitles: partitionsArray)
-            partitionPickerListPopUpButton.setTitle("Choose the Partition")
+
+        if (!pickReborn.itemArray.isEmpty) {
+           pickReborn.isEnabled = true
         }
         else{
-            partitionPickerListPopUpButton.isEnabled = false
-            partitionPickerListPopUpButton.setTitle("No External Partitions were detected")
+           pickReborn.isEnabled = false
+            pickReborn.addItem(withTitle: "No Partitions were detected")
         }
         
     }
@@ -230,7 +215,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             counter = 2
         }
         
-        if (partitionPickerListPopUpButton.title == "Choose the Partition" || partitionPickerListPopUpButton.title == "Click the \"Update\" button first" || partitionPickerListPopUpButton.title == "No External Partitions were detected") {
+        if (pickReborn.title == "No Partitions were detected" || pickReborn.stringValue.isEmpty) {
             counter+=1
         }
         /*
@@ -254,7 +239,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                  */
                 setGUIEnabledState(false)
                 setProgress(5)
-                startDiskCreating(windowsISO: isoPathTextField.stringValue, partition: partitionPickerListPopUpButton.title)
+                startDiskCreating(windowsISO: isoPathTextField.stringValue, partition: pickReborn.title)
             } else {
                 alertDialog(message: "Selected \"\(isoPathTextField.stringValue)\" does not exist.")
             }
@@ -267,13 +252,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          Функция для остановки создания загрузочной флешки.
          Работает путём "убивания" процессов, созданных через функцию shell()
          */
+        
         for pid in pidList{
+            
             shell("kill -9 \(pid)")
         }
         pidList.removeAll()
         isPreparingToKillShells = true
     }
-
+    
     func formatPartition(_ volumeUDID : String, newPartitionName: String){
         /*
          Функция для форматирования выбранного раздела по его UUID (в целях безопасности)
@@ -286,13 +273,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         /*
          Функция, с которой начинается создание загрузочного раздела.
          */
-        CancelButton.isHidden = false
         DispatchQueue.global(qos: .background).async {  [self] in
-          
+            
             setProgress(1)
             
             let volumeUDID = String(shell("diskutil info \"/Volumes/\(partition)\" | grep 'Volume UUID:'").dropFirst(30))
-          
+            
             setProgress(3)
             
             /*
@@ -308,15 +294,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 if let range = hdiutilMountPath.range(of: "/Volumes/") {
                     hdiutilMountPath = String(hdiutilMountPath.dropFirst(hdiutilMountPath.distance(from: hdiutilMountPath.startIndex, to: range.lowerBound)))
                 }
+                cancelButtonHiddenState(false)
+                
             }
             else{
                 print("[ERROR] > Can't mount .iso image. It may be corrupted or its just a macOS bug (detected in Big Sur Beta 6).")
-              
+                
                 setProgress(0)
                 
                 alertDialog(message: "An Error was occured when trying to mount .iso image. It can be related to corrupted image or to macOS Bug.")
                 setGUIEnabledState(true)
-                
+                cancelButtonHiddenState(true)
                 return
                 
             }
@@ -333,8 +321,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             formatPartition(volumeUDID, newPartitionName: randomPartitionName)
             setProgress(14)
             print("[DEBUG] > Mounting Windows in Finder")
-
-
+            
+            
             /*
              Копирование ресурсов установщика на раздел FAT32
              */
@@ -349,6 +337,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 setProgress(70)
             }
             else{
+                setGUIEnabledState(true)
+                cancelButtonHiddenState(true)
                 return
             }
             /*
@@ -371,7 +361,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             setProgress(100)
             setGUIEnabledState(true)
-            
+            cancelButtonHiddenState(true)
         }
         
     }

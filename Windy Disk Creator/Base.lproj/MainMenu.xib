@@ -24,7 +24,7 @@
                 <outlet property="UpdateButton" destination="seS-sP-K5K" id="nea-fG-D7M"/>
                 <outlet property="WindyView" destination="EiT-Mj-1SZ" id="f5Q-iv-4zC"/>
                 <outlet property="isoPathTextField" destination="ACQ-wz-mmm" id="HJf-aG-GxC"/>
-                <outlet property="partitionPickerListPopUpButton" destination="oa0-RG-MNj" id="lcH-zd-nxS"/>
+                <outlet property="pickReborn" destination="PNJ-zg-fpG" id="YS9-aM-ikI"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="6UX-kI-NXG"/>
             </connections>
         </customObject>
@@ -93,22 +93,6 @@
                             <action selector="OnClickExternalPartitionsPickerUpdateButton:" target="Voe-Tx-rLC" id="RBK-iL-W94"/>
                         </connections>
                     </button>
-                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CXS-Xl-JXx">
-                        <rect key="frame" x="19" y="250" width="362" height="25"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <popUpButtonCell key="cell" type="push" title="Click the &quot;Update&quot; button first" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" enabled="NO" state="on" borderStyle="border" inset="2" pullsDown="YES" id="oa0-RG-MNj">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="menu"/>
-                            <menu key="menu" id="05Y-En-mnS">
-                                <items>
-                                    <menuItem title="Click the &quot;Update&quot; button first" state="on" hidden="YES" id="dOb-FS-PL5"/>
-                                </items>
-                            </menu>
-                            <connections>
-                                <action selector="onClickPartitionPickerList:" target="Voe-Tx-rLC" id="uBn-2r-AwI"/>
-                            </connections>
-                        </popUpButtonCell>
-                    </popUpButton>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lwG-e5-T3j">
                         <rect key="frame" x="196" y="175" width="88" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -143,6 +127,15 @@
                             <action selector="OnClickCancelButton:" target="Voe-Tx-rLC" id="85G-zr-s5h"/>
                         </connections>
                     </button>
+                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PNJ-zg-fpG">
+                        <rect key="frame" x="20" y="251" width="359" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="wou-2s-wo5">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" id="WmK-Cz-jIM"/>
+                        </popUpButtonCell>
+                    </popUpButton>
                 </subviews>
             </view>
             <point key="canvasLocation" x="140" y="-123"/>
