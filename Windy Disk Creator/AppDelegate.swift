@@ -31,10 +31,22 @@ func randomString(length: Int) -> String {
     let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     return String((0..<length).map{ _ in letters.randomElement()! })
 }
+
+func getStringBetween(_ originalString : String, firstPart : String, secondPart : String) -> String{
+    if let range = originalString.range(of: firstPart) {
+        var stringOutput = String(originalString.dropFirst(originalString.distance(from: originalString.startIndex, to: range.upperBound)))
+        if let range = stringOutput.range(of: secondPart) {
+            stringOutput = String(stringOutput[..<range.lowerBound])
+            return stringOutput
+        }
+    }
+    return ""
+}
+
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
     
-    var isPreparingToKillShells = false
+    var isPreparingToKillShells = false //TODO: FIX
     let filePickerWindowsISO = NSOpenPanel()
     let wimlibPath = "\(String(Bundle.main.executablePath!).dropLast(24))Resources/.libs"
     var pidList = [Int32]()
@@ -49,13 +61,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var CancelButton: NSButton!
     @IBOutlet weak var PickerPopUpButton: NSPopUpButton!
-   
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
-        
+    
+    func applicationDidFinishLaunching(_ aNotification: Notification) {/*
+         let template = shell("diskutil info /Volumes/CCCOMA_X64FRE_EN-US_DV9 | grep \'Volume Total Space:\'")
+         var range = template.range(of: " Bytes)")
+         print(range?.lowerBound)
+         */
+
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
-        
+        print("[DEBUG] Exiting...")
+    }
+    
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        NSApplication.shared.terminate(self)
+        return true
     }
     
     @discardableResult
@@ -126,7 +147,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
                 
             } else {
-               // User clicked on "Close" button.
+                // User clicked on "Close" button.
                 return
             }
         }
@@ -156,16 +177,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          It's using for updating mounted Internal/External partitions.
          */
         PickerPopUpButton.removeAllItems()
-             do {
-                /*
-                 Getting mounted partitions in /Volumes/
-                 */
+        do {
+            /*
+             Getting mounted partitions in /Volumes/
+             */
             let unfilteredPartitionsArray = try FileManager.default.contentsOfDirectory(atPath: "/Volumes/")
             print("[DEBUG] > Partitions: \(unfilteredPartitionsArray)")
-                /*
-                 Partition filtering [Internal/External] using diskutil,
-                 because this feature is not natively available in Swift.
-                 */
+            /*
+             Partition filtering [Internal/External] using diskutil,
+             because this feature is not natively available in Swift.
+             */
             
             var rawDiskUtilOutput : String
             if (ShowOnlyExternalPartitionsCheckBox.state == .on){
@@ -188,12 +209,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } catch {
             print("[ERROR] > Something went wrong: \(error)")
         }
-
+        
         if (!PickerPopUpButton.itemArray.isEmpty) {
-           PickerPopUpButton.isEnabled = true
+            PickerPopUpButton.isEnabled = true
         }
         else{
-           PickerPopUpButton.isEnabled = false
+            PickerPopUpButton.isEnabled = false
             PickerPopUpButton.addItem(withTitle: "No Partitions were detected")
         }
         
@@ -211,10 +232,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             counter = 2
         }
         
-        if (PickerPopUpButton.title == "No Partitions were detected" || PickerPopUpButton.stringValue.isEmpty) {
+        if (PickerPopUpButton.title == "No Partitions were detected" || PickerPopUpButton.title.isEmpty) {
             counter+=1
         }
-
+        
         switch counter {
         case 2:
             alertDialog(message: "Windows ISO was not selected.")
@@ -266,6 +287,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         /*
          Starting disk creating process.
          */
+        isPreparingToKillShells = false
         DispatchQueue.global(qos: .background).async {  [self] in
             
             setProgress(1)
@@ -298,6 +320,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 alertDialog(message: "An Error was occured when trying to mount .iso image. It can be related to corrupted image or to macOS Bug.")
                 setGUIEnabledState(true)
                 cancelButtonHiddenState(true)
+                DispatchQueue.main.async {
+                PickerPopUpButton.removeAllItems()
+                }
                 return
                 
             }
@@ -305,13 +330,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             hdiutilMountPath = String(hdiutilMountPath.dropLast())
             
+            let windowsPartitionSize = Int64(getStringBetween(shell("diskutil info \"\(hdiutilMountPath)\" | grep \'Volume Total Space:\'"), firstPart: " (", secondPart: " Bytes)"))!
+            let choosenPartitionSize = Int64(getStringBetween(shell("diskutil info \"\(partition)\" | grep \'Volume Total Space:\'"), firstPart: " (", secondPart: " Bytes)"))!
+                print("[DEBUG] > Windows: \(windowsPartitionSize)")
+                print("[DEBUG] > Choosen Partition: \(choosenPartitionSize)")
+            if windowsPartitionSize > (choosenPartitionSize + 100000000) {
+                print("[DEBUG] > Oversized .iso Image. Aborting writing.")
+                alertDialog(message: "This .iso Image (\(windowsPartitionSize / 1024 / 1024)MB) can't fit into choosen partition (\(choosenPartitionSize / 1024 / 1024)MB)")
+                setGUIEnabledState(true)
+                cancelButtonHiddenState(true)
+                setProgress(0)
+                DispatchQueue.main.async {
+                PickerPopUpButton.removeAllItems()
+                }
+                return
+            }
+            
             setProgress(8)
             
             let randomPartitionName = ("WINDY_\(randomString(length: 5))")
-
+            
             formatPartition(volumeUDID, newPartitionName: randomPartitionName)
             setProgress(14)
-            print("[DEBUG] > Mounting Windows in Finder")
             
             
             /*
@@ -330,6 +370,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             else{
                 setGUIEnabledState(true)
                 cancelButtonHiddenState(true)
+                DispatchQueue.main.async {
+                    PickerPopUpButton.removeAllItems()
+                }
                 return
             }
             /*
@@ -353,6 +396,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             setProgress(100)
             setGUIEnabledState(true)
             cancelButtonHiddenState(true)
+            DispatchQueue.main.async {
+            PickerPopUpButton.removeAllItems()
+            }
         }
         
     }
