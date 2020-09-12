@@ -21,6 +21,17 @@ func getFileSize(path : String) -> UInt64{
         return 0
     }
 }
+func checkIfDirectoryExists(_ fullPath : String) -> Bool{
+    let fileManager = FileManager.default
+    var isDir : ObjCBool = false
+    if fileManager.fileExists(atPath: fullPath, isDirectory:&isDir) {
+        if isDir.boolValue {
+            // file exists and is a directory
+            return true
+        }
+    }
+    return false
+}
 
 func randomString(length: Int) -> String {
     /*
@@ -46,7 +57,7 @@ func getStringBetween(_ originalString : String, firstPart : String, secondPart 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
     
-    var isPreparingToKillShells = false //TODO: FIX
+    var isPreparingToKillShells = false
     let filePickerWindowsISO = NSOpenPanel()
     let wimlibPath = "\(String(Bundle.main.executablePath!).dropLast(24))Resources/.libs"
     var pidList = [Int32]()
@@ -62,12 +73,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var CancelButton: NSButton!
     @IBOutlet weak var PickerPopUpButton: NSPopUpButton!
     
-    func applicationDidFinishLaunching(_ aNotification: Notification) {/*
-         let template = shell("diskutil info /Volumes/CCCOMA_X64FRE_EN-US_DV9 | grep \'Volume Total Space:\'")
-         var range = template.range(of: " Bytes)")
-         print(range?.lowerBound)
-         */
-
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
+        
+        
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -95,13 +103,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return output
         
     }
+    
     func cancelButtonHiddenState(_ state : Bool) {
         DispatchQueue.main.async { [self] in
             CancelButton.isHidden = state
         }
     }
+    
     func setProgress(_ progress : Double){
-        /* Функция для изменения прогресса ProgressBar*/
+        /*
+         Changing the ProgressBar progress
+         */
         DispatchQueue.main.async {
             self.ProgressBar.doubleValue = progress
         }
@@ -170,7 +182,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    
+    func onInterruptDiskCreating() {
+        setGUIEnabledState(true)
+        cancelButtonHiddenState(true)
+        setProgress(0)
+        DispatchQueue.main.async {
+            self.PickerPopUpButton.removeAllItems()
+        }
+    }
     @IBAction func OnClickExternalPartitionsPickerUpdateButton(_ sender: Any) {
         /*
          OnClick event on "Update" button.
@@ -314,35 +333,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             else{
                 print("[ERROR] > Can't mount .iso image. It may be corrupted or its just a macOS bug (detected in Big Sur Beta 6).")
-                
-                setProgress(0)
-                
                 alertDialog(message: "An Error was occured when trying to mount .iso image. It can be related to corrupted image or to macOS Bug.")
-                setGUIEnabledState(true)
-                cancelButtonHiddenState(true)
-                DispatchQueue.main.async {
-                PickerPopUpButton.removeAllItems()
-                }
+                onInterruptDiskCreating()
                 return
                 
             }
             
-            
             hdiutilMountPath = String(hdiutilMountPath.dropLast())
             
             let windowsPartitionSize = Int64(getStringBetween(shell("diskutil info \"\(hdiutilMountPath)\" | grep \'Volume Total Space:\'"), firstPart: " (", secondPart: " Bytes)"))!
+            if(!checkIfDirectoryExists("/Volumes/\(partition)")){
+                print("[DEBUG] > Partition was disconnected. Aborting...")
+                alertDialog(message: "Selected partition was disconnected. Aborting the operation.")
+                onInterruptDiskCreating()
+                return
+            }
             let choosenPartitionSize = Int64(getStringBetween(shell("diskutil info \"\(partition)\" | grep \'Volume Total Space:\'"), firstPart: " (", secondPart: " Bytes)"))!
-                print("[DEBUG] > Windows: \(windowsPartitionSize)")
-                print("[DEBUG] > Choosen Partition: \(choosenPartitionSize)")
+            print("[DEBUG] > Windows: (\(windowsPartitionSize) Bytes)")
+            print("[DEBUG] > Choosen Partition Size: (\(choosenPartitionSize) Bytes)")
             if windowsPartitionSize > (choosenPartitionSize + 100000000) {
                 print("[DEBUG] > Oversized .iso Image. Aborting writing.")
                 alertDialog(message: "This .iso Image (\(windowsPartitionSize / 1024 / 1024)MB) can't fit into choosen partition (\(choosenPartitionSize / 1024 / 1024)MB)")
-                setGUIEnabledState(true)
-                cancelButtonHiddenState(true)
-                setProgress(0)
-                DispatchQueue.main.async {
-                PickerPopUpButton.removeAllItems()
-                }
+                onInterruptDiskCreating()
                 return
             }
             
@@ -368,11 +380,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 setProgress(70)
             }
             else{
-                setGUIEnabledState(true)
-                cancelButtonHiddenState(true)
-                DispatchQueue.main.async {
-                    PickerPopUpButton.removeAllItems()
-                }
+                onInterruptDiskCreating()
                 return
             }
             /*
@@ -397,7 +405,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             setGUIEnabledState(true)
             cancelButtonHiddenState(true)
             DispatchQueue.main.async {
-            PickerPopUpButton.removeAllItems()
+                PickerPopUpButton.removeAllItems()
             }
         }
         
