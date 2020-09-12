@@ -18,13 +18,12 @@
                 <outlet property="CancelButton" destination="7FD-JO-Erx" id="R5I-5p-DPV"/>
                 <outlet property="ChooseButton" destination="5lQ-wz-d2S" id="OeR-Az-1b1"/>
                 <outlet property="ISOPickerInput" destination="ACQ-wz-mmm" id="izj-Ox-0Ar"/>
+                <outlet property="PickerPopUpButton" destination="PNJ-zg-fpG" id="YS9-aM-ikI"/>
                 <outlet property="ProgressBar" destination="UQ8-Rb-Wth" id="YzX-J9-Fue"/>
                 <outlet property="ShowOnlyExternalPartitionsCheckBox" destination="uaw-Cy-uUb" id="5lq-uz-Aq5"/>
                 <outlet property="StartButton" destination="lwG-e5-T3j" id="zeU-ab-x6H"/>
                 <outlet property="UpdateButton" destination="seS-sP-K5K" id="nea-fG-D7M"/>
-                <outlet property="WindyView" destination="EiT-Mj-1SZ" id="f5Q-iv-4zC"/>
                 <outlet property="isoPathTextField" destination="ACQ-wz-mmm" id="HJf-aG-GxC"/>
-                <outlet property="pickReborn" destination="PNJ-zg-fpG" id="YS9-aM-ikI"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="6UX-kI-NXG"/>
             </connections>
         </customObject>

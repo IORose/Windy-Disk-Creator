@@ -11,8 +11,8 @@ import Cocoa
 
 func getFileSize(path : String) -> UInt64{
     /*
-     Функция для получения размера файла. В нашем случае проверка идет на install.wim,
-     который может быть более 4GB (лимит FAT32)
+     Getting file size. In our case, we are checking for install.wim size,
+     which can be more than 4GB (FAT32 Limit).
      */
     do {
         return  (try FileManager.default.attributesOfItem(atPath: path) as NSDictionary).fileSize()
@@ -22,13 +22,11 @@ func getFileSize(path : String) -> UInt64{
     }
 }
 
-
-
 func randomString(length: Int) -> String {
     /*
-     Функция для генерации случайных символов.
-     Используется для задания имени форматированного раздела в FAT 32.
-     Пример названия созданного раздела с генерацией символов этой функции: WINDY_POQAX
+     Generating random symbols.
+     It's using to set random name on formated FAT32 Partition.
+     Example: WINDY_P0QAX, where P0QAX - random sequence of 5 symbols.
      */
     let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     return String((0..<length).map{ _ in letters.randomElement()! })
@@ -42,7 +40,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var pidList = [Int32]()
     
     @IBOutlet weak var isoPathTextField: NSTextField!
- //   @IBOutlet weak var partitionPickerListPopUpButton: NSPopUpButtonCell!
     @IBOutlet weak var ISOPickerInput: NSTextField!
     @IBOutlet weak var StartButton: NSButton!
     @IBOutlet weak var UpdateButton: NSButton!
@@ -51,8 +48,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var ShowOnlyExternalPartitionsCheckBox: NSButton!
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var CancelButton: NSButton!
-    
-    @IBOutlet weak var pickReborn: NSPopUpButton!
+    @IBOutlet weak var PickerPopUpButton: NSPopUpButton!
+   
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         
     }
@@ -63,8 +60,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @discardableResult
     func shell(_ command: String) -> String {
-        /* Функция для вызова шелла.
-         (Для выполнения терминальных команд) */
+        /* Executing Shell commands.
+         It's using to call diskutil and rsync commands.*/
         let task = Process()
         let pipe = Pipe()
         task.standardOutput = pipe
@@ -91,8 +88,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func alertDialog(message: String){
         /*
-         Функция для создания Alert-диалога, предупреждающего о неверной введенной
-         информации.
+         Alert Dialog, which warn user about incorrect input data.
          */
         DispatchQueue.main.async {
             let alert = NSAlert()
@@ -109,7 +105,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func ISOPickerButton(_ sender: Any) {
         /*
-         Функция создания и вызова диалога выбора файлов с указанными ниже параметрами.
+         Calling System Documents picker to pick an .iso file.
          */
         DispatchQueue.main.async { [self] in
             
@@ -122,7 +118,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             filePickerWindowsISO.allowedFileTypes        = ["iso"]
             
             if (filePickerWindowsISO.runModal() ==  NSApplication.ModalResponse.OK) {
-                let result = filePickerWindowsISO.url // Pathname of the file
+                let result = filePickerWindowsISO.url
                 
                 if (result != nil) {
                     let path : String = result!.path
@@ -130,7 +126,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
                 
             } else {
-               // Пользователь нажал на "Отмена"
+               // User clicked on "Close" button.
                 return
             }
         }
@@ -138,14 +134,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func setGUIEnabledState(_ state : Bool)  {
         /*
-         Изменение состояния активности у элементов интерфейса
+         Changing GUI Active state
          */
         DispatchQueue.main.async { [self] in
             
             ChooseButton.isEnabled = state
             UpdateButton.isEnabled = state
             StartButton.isEnabled = state
-            pickReborn.isEnabled = state
+            PickerPopUpButton.isEnabled = state
             isoPathTextField.isEnabled = state
             ShowOnlyExternalPartitionsCheckBox.isEnabled = state
             window!.standardWindowButton(.closeButton)!.isEnabled = state
@@ -156,20 +152,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func OnClickExternalPartitionsPickerUpdateButton(_ sender: Any) {
         /*
-         Функция, выполняющаяся по нажатию на кнопку "Update" в выборе разделов.
-         Неоюходима для поиска внешних смонтированных разделов на компьютере Mac.
+         OnClick event on "Update" button.
+         It's using for updating mounted Internal/External partitions.
          */
-        pickReborn.removeAllItems()
+        PickerPopUpButton.removeAllItems()
              do {
-            /*
-             Получение списка смонтированных разделов в каталоге /Volumes
-             */
+                /*
+                 Getting mounted partitions in /Volumes/
+                 */
             let unfilteredPartitionsArray = try FileManager.default.contentsOfDirectory(atPath: "/Volumes/")
             print("[DEBUG] > Partitions: \(unfilteredPartitionsArray)")
-            /*
-             Фильтрация внешних разделов от внутренних с помощью diskutil,
-             т.к. Swift не позволяет это сделать своими средствами
-             */
+                /*
+                 Partition filtering [Internal/External] using diskutil,
+                 because this feature is not natively available in Swift.
+                 */
             
             var rawDiskUtilOutput : String
             if (ShowOnlyExternalPartitionsCheckBox.state == .on){
@@ -182,7 +178,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print(unfilteredPartitionsArray)
             for unfilteredSinglePartition in unfilteredPartitionsArray{
                 if(rawDiskUtilOutput).contains("<string>/Volumes/\(unfilteredSinglePartition)</string>"){
-                    pickReborn.addItem(withTitle: unfilteredSinglePartition)
+                    PickerPopUpButton.addItem(withTitle: unfilteredSinglePartition)
                     print("[DEBUG] > Adding (\(unfilteredSinglePartition)) partition to picker.")
                 }
                 
@@ -193,12 +189,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print("[ERROR] > Something went wrong: \(error)")
         }
 
-        if (!pickReborn.itemArray.isEmpty) {
-           pickReborn.isEnabled = true
+        if (!PickerPopUpButton.itemArray.isEmpty) {
+           PickerPopUpButton.isEnabled = true
         }
         else{
-           pickReborn.isEnabled = false
-            pickReborn.addItem(withTitle: "No Partitions were detected")
+           PickerPopUpButton.isEnabled = false
+            PickerPopUpButton.addItem(withTitle: "No Partitions were detected")
         }
         
     }
@@ -207,7 +203,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction func OnClickStartButton(_ sender: Any) {
         /*
-         Функция, проверяющая правильность введенной информации
+         Checking correctness of input data.
          */
         var counter: Int8 = 0
         print(isoPathTextField.stringValue)
@@ -215,12 +211,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             counter = 2
         }
         
-        if (pickReborn.title == "No Partitions were detected" || pickReborn.stringValue.isEmpty) {
+        if (PickerPopUpButton.title == "No Partitions were detected" || PickerPopUpButton.stringValue.isEmpty) {
             counter+=1
         }
-        /*
-         Проверка "чего нехватает"
-         */
+
         switch counter {
         case 2:
             alertDialog(message: "Windows ISO was not selected.")
@@ -235,11 +229,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let fileManager = FileManager.default
             if fileManager.fileExists(atPath: isoPathTextField.stringValue) {
                 /*
-                 Проверка данных успешна. Приступаем к созданию загрузочного раздела.
+                 Input check done. All information is correct (probably)
                  */
                 setGUIEnabledState(false)
                 setProgress(5)
-                startDiskCreating(windowsISO: isoPathTextField.stringValue, partition: pickReborn.title)
+                startDiskCreating(windowsISO: isoPathTextField.stringValue, partition: PickerPopUpButton.title)
             } else {
                 alertDialog(message: "Selected \"\(isoPathTextField.stringValue)\" does not exist.")
             }
@@ -249,12 +243,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func stopBackgroundTransfering() {
         /*
-         Функция для остановки создания загрузочной флешки.
-         Работает путём "убивания" процессов, созданных через функцию shell()
+         Force stop of copying files via killing processes,
+         which were executed with shell().
          */
         
         for pid in pidList{
-            
             shell("kill -9 \(pid)")
         }
         pidList.removeAll()
@@ -263,15 +256,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func formatPartition(_ volumeUDID : String, newPartitionName: String){
         /*
-         Функция для форматирования выбранного раздела по его UUID (в целях безопасности)
-         в файловую систему FAT32 с названием WINDY_***** (вместо ***** генерируются случайные буквы)
+         Formatting selected partition by its UUID (in terms of safety)
+         in FAT32 FileSystem with WINDY_***** name (where ***** - random letters).
          */
         print("[DEBUG] > New Partition Name: \(newPartitionName)")
         print(shell("diskutil eraseVolume FAT32 \(newPartitionName) \(volumeUDID)"))
     }
     func startDiskCreating(windowsISO : String, partition : String) {
         /*
-         Функция, с которой начинается создание загрузочного раздела.
+         Starting disk creating process.
          */
         DispatchQueue.global(qos: .background).async {  [self] in
             
@@ -282,7 +275,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             setProgress(3)
             
             /*
-             Монтирование образа Windows.iso в /Volumes/
+             Attempting to mount Windows.iso in /Volumes/
              */
             
             var hdiutilMountPath = shell("hdiutil attach \"\(windowsISO)\"  -mountroot /Volumes/ -readonly")
@@ -315,22 +308,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             setProgress(8)
             
             let randomPartitionName = ("WINDY_\(randomString(length: 5))")
-            /*
-             Форматирование раздела с выбранными параметрами.
-             */
+
             formatPartition(volumeUDID, newPartitionName: randomPartitionName)
             setProgress(14)
             print("[DEBUG] > Mounting Windows in Finder")
             
             
             /*
-             Копирование ресурсов установщика на раздел FAT32
+             Copying Windows installer into WINDY_***** partition.
              */
             print("[DEBUG] > Starting resources copying to Destination partition /Volumes/\(randomPartitionName)")
             if (!isPreparingToKillShells){
                 setProgress(50)
                 /*
-                 Копирование ресурсов установщика без install.wim, т.к. его размер может быть более 4GB
+                 Copying installer resources, except for install.wim, because its size can be more than 4GB, which is FAT32 limit.
                  */
                 print(shell("rsync -av --exclude='sources/install.wim' \"\(hdiutilMountPath)/\" /Volumes/\(randomPartitionName)"))
                 
@@ -342,8 +333,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 return
             }
             /*
-             Проверка Install.wim на размер и его копирование (если размер более 4GB, то будет произведено разделение
-             install.wim на части)
+             Getting Install.wim size and copying it to the destination. (If Install.wim size is more than 4GB,
+             then this image will be devided into parts.
              */
             if (!isPreparingToKillShells){
                 let installWimSize = getFileSize(path: "\(hdiutilMountPath)/sources/install.wim") / 1024 / 1024
