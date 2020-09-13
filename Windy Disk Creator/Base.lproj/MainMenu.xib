@@ -15,15 +15,15 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Windy_Disk_Creator" customModuleProvider="target">
             <connections>
-                <outlet property="CancelButton" destination="7FD-JO-Erx" id="R5I-5p-DPV"/>
-                <outlet property="ChooseButton" destination="5lQ-wz-d2S" id="OeR-Az-1b1"/>
-                <outlet property="ISOPickerInput" destination="ACQ-wz-mmm" id="izj-Ox-0Ar"/>
-                <outlet property="PickerPopUpButton" destination="PNJ-zg-fpG" id="YS9-aM-ikI"/>
-                <outlet property="ProgressBar" destination="UQ8-Rb-Wth" id="YzX-J9-Fue"/>
-                <outlet property="ShowOnlyExternalPartitionsCheckBox" destination="uaw-Cy-uUb" id="5lq-uz-Aq5"/>
-                <outlet property="StartButton" destination="lwG-e5-T3j" id="zeU-ab-x6H"/>
-                <outlet property="UpdateButton" destination="seS-sP-K5K" id="nea-fG-D7M"/>
-                <outlet property="isoPathTextField" destination="ACQ-wz-mmm" id="HJf-aG-GxC"/>
+                <outlet property="CancelButton" destination="EKn-mo-Aqp" id="gnt-xH-7M2"/>
+                <outlet property="ChooseButton" destination="GW0-K9-Xze" id="CyA-YY-pJd"/>
+                <outlet property="PickerPopUpButton" destination="qPV-NB-QAX" id="pzj-u2-O7R"/>
+                <outlet property="ProgressBar" destination="D7A-Ub-e1r" id="Uj3-L0-U32"/>
+                <outlet property="ShowOnlyExternalPartitionsCheckBox" destination="IUj-dI-qja" id="Fch-KO-a7V"/>
+                <outlet property="StartButton" destination="vka-7c-Rp7" id="dBc-Kt-3oB"/>
+                <outlet property="UpdateButton" destination="FO3-YZ-kA0" id="7PH-zA-EP6"/>
+                <outlet property="isoPathTextField" destination="3dg-AY-69t" id="nHb-ZR-844"/>
+                <outlet property="visualEffect" destination="2yP-W7-bQ0" id="qgP-q0-nr9"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="6UX-kI-NXG"/>
             </connections>
         </customObject>
@@ -61,80 +61,92 @@
                 <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ACQ-wz-mmm">
-                        <rect key="frame" x="20" y="319" width="358" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Windows.iso" bezelStyle="round" id="K45-ip-xpi">
-                            <font key="font" usesAppearanceFont="YES"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5lQ-wz-d2S">
-                        <rect key="frame" x="385" y="316" width="76" height="23"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="roundTextured" title="Choose" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eeN-RV-php">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="ISOPickerButton:" target="Voe-Tx-rLC" id="BU9-a2-n9G"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="seS-sP-K5K">
-                        <rect key="frame" x="385" y="252" width="76" height="23"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="roundTextured" title="Update" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gax-5U-aMN">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="OnClickExternalPartitionsPickerUpdateButton:" target="Voe-Tx-rLC" id="RBK-iL-W94"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lwG-e5-T3j">
-                        <rect key="frame" x="196" y="175" width="88" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="START" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mUq-Q1-Mzi">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="OnClickStartButton:" target="Voe-Tx-rLC" id="dW2-zq-z2l"/>
-                        </connections>
-                    </button>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uaw-Cy-uUb">
-                        <rect key="frame" x="20" y="228" width="358" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Show only External partitions" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="9qc-cE-wef">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
-                    <progressIndicator fixedFrame="YES" maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="UQ8-Rb-Wth">
-                        <rect key="frame" x="20" y="53" width="440" height="20"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    </progressIndicator>
-                    <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7FD-JO-Erx">
-                        <rect key="frame" x="152" y="13" width="176" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="[CANCEL]" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GwX-OO-u2n">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="OnClickCancelButton:" target="Voe-Tx-rLC" id="85G-zr-s5h"/>
-                        </connections>
-                    </button>
-                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PNJ-zg-fpG">
-                        <rect key="frame" x="20" y="251" width="359" height="25"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="wou-2s-wo5">
-                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="menu"/>
-                            <menu key="menu" id="WmK-Cz-jIM"/>
-                        </popUpButtonCell>
-                    </popUpButton>
+                    <visualEffectView fixedFrame="YES" blendingMode="behindWindow" material="appearanceBased" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="2yP-W7-bQ0">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <view id="Ezd-Xa-gk2">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <subviews>
+                                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3dg-AY-69t">
+                                        <rect key="frame" x="20" y="319" width="358" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Windows.iso" bezelStyle="round" id="la1-8M-fDx">
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GW0-K9-Xze">
+                                        <rect key="frame" x="385" y="316" width="76" height="23"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="roundTextured" title="Choose" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Twe-8m-up7">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="ISOPickerButton:" target="Voe-Tx-rLC" id="NYw-Fd-O6m"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FO3-YZ-kA0">
+                                        <rect key="frame" x="385" y="252" width="76" height="23"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="roundTextured" title="Update" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="RQj-WG-zf4">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="OnClickExternalPartitionsPickerUpdateButton:" target="Voe-Tx-rLC" id="icL-pT-V05"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vka-7c-Rp7">
+                                        <rect key="frame" x="196" y="175" width="88" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="START" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hlm-k7-cDK">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="OnClickStartButton:" target="Voe-Tx-rLC" id="3S2-RP-2Tv"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IUj-dI-qja">
+                                        <rect key="frame" x="20" y="228" width="358" height="18"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="check" title="Show only External partitions" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="U8h-pn-Rwy">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                    </button>
+                                    <progressIndicator wantsLayer="YES" fixedFrame="YES" maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="D7A-Ub-e1r">
+                                        <rect key="frame" x="20" y="53" width="440" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    </progressIndicator>
+                                    <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EKn-mo-Aqp">
+                                        <rect key="frame" x="152" y="13" width="176" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="[CANCEL]" bezelStyle="rounded" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="iz5-Dy-rjE">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="OnClickCancelButton:" target="Voe-Tx-rLC" id="3hj-4y-Vui"/>
+                                        </connections>
+                                    </button>
+                                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qPV-NB-QAX">
+                                        <rect key="frame" x="20" y="251" width="359" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="T9h-mz-N2U">
+                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="menu"/>
+                                            <menu key="menu" id="oIh-kb-U6e"/>
+                                        </popUpButtonCell>
+                                    </popUpButton>
+                                </subviews>
+                            </view>
+                        </subviews>
+                    </visualEffectView>
                 </subviews>
             </view>
             <point key="canvasLocation" x="140" y="-123"/>

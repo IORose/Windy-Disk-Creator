@@ -62,8 +62,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let wimlibPath = "\(String(Bundle.main.executablePath!).dropLast(24))Resources/.libs"
     var pidList = [Int32]()
     
+   
     @IBOutlet weak var isoPathTextField: NSTextField!
-    @IBOutlet weak var ISOPickerInput: NSTextField!
+    // @IBOutlet weak var ISOPickerInput: NSTextField!
     @IBOutlet weak var StartButton: NSButton!
     @IBOutlet weak var UpdateButton: NSButton!
     @IBOutlet weak var ChooseButton: NSButton!
@@ -72,10 +73,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var CancelButton: NSButton!
     @IBOutlet weak var PickerPopUpButton: NSPopUpButton!
+    @IBOutlet weak var visualEffect: NSVisualEffectView!
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        
-        
+        window?.isMovableByWindowBackground = true
+        window?.contentView = visualEffect
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -155,7 +157,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 
                 if (result != nil) {
                     let path : String = result!.path
-                    ISOPickerInput.stringValue = path
+                    isoPathTextField.stringValue = path
                 }
                 
             } else {
