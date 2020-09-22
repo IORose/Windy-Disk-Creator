@@ -425,13 +425,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         break
                     }
                 }
+            }
                 setProgress(100)
                 setGUIEnabledState(true)
                 cancelButtonHiddenState(true)
                 DispatchQueue.main.async {
                     PickerPopUpButton.removeAllItems()
                 }
-            }
+            
             
         }
         
