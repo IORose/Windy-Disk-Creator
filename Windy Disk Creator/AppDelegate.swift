@@ -62,22 +62,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let wimlibPath = "\(String(Bundle.main.executablePath!).dropLast(24))Resources/.libs"
     var pidList = [Int32]()
     
-   
-    @IBOutlet weak var isoPathTextField: NSTextField!
-    // @IBOutlet weak var ISOPickerInput: NSTextField!
+    
+    @IBOutlet weak var ISOPathTextField: NSTextField!
     @IBOutlet weak var StartButton: NSButton!
     @IBOutlet weak var UpdateButton: NSButton!
     @IBOutlet weak var ChooseButton: NSButton!
     @IBOutlet weak var ProgressBar: NSProgressIndicator!
     @IBOutlet weak var ShowOnlyExternalPartitionsCheckBox: NSButton!
-    @IBOutlet weak var window: NSWindow!
+    @IBOutlet weak var Window: NSWindow!
     @IBOutlet weak var CancelButton: NSButton!
     @IBOutlet weak var PickerPopUpButton: NSPopUpButton!
-    @IBOutlet weak var visualEffect: NSVisualEffectView!
+    @IBOutlet weak var VisualEffect: NSVisualEffectView!
+    @IBOutlet weak var OSVersionPickerPopUpButton: NSPopUpButton!
+    @IBOutlet weak var OSVersionPickerTextLabel: NSTextField!
+    
+    
+    @IBAction func OnClickDebugButton(_ sender: Any) {
+        print("[D-BUTTON] > \(OSVersionPickerPopUpButton.indexOfSelectedItem)")
+        let command =  "\"\(wimlibPath)/wimlib-imagex\" extract \"/Volumes/GSP1RMCENXVOL_RU_DVD/sources/install.wim\" 1 /Windows/Boot/EFI/bootmgfw.efi --dest-dir=\"/Users/winterboard/Desktop/mountdir/\""
+        print(command)
+        // print(shell(command))
+    }
+    
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        window?.isMovableByWindowBackground = true
-        window?.contentView = visualEffect
+        Window?.isMovableByWindowBackground = true
+        Window?.contentView = VisualEffect
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -105,6 +115,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return output
         
     }
+    
     
     func cancelButtonHiddenState(_ state : Bool) {
         DispatchQueue.main.async { [self] in
@@ -157,7 +168,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 
                 if (result != nil) {
                     let path : String = result!.path
-                    isoPathTextField.stringValue = path
+                    ISOPathTextField.stringValue = path
                 }
                 
             } else {
@@ -177,9 +188,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             UpdateButton.isEnabled = state
             StartButton.isEnabled = state
             PickerPopUpButton.isEnabled = state
-            isoPathTextField.isEnabled = state
+            ISOPathTextField.isEnabled = state
             ShowOnlyExternalPartitionsCheckBox.isEnabled = state
-            window!.standardWindowButton(.closeButton)!.isEnabled = state
+            Window!.standardWindowButton(.closeButton)!.isEnabled = state
+            OSVersionPickerPopUpButton.isEnabled = state
+            OSVersionPickerTextLabel.isEnabled = state
             
         }
     }
@@ -248,8 +261,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          Checking correctness of input data.
          */
         var counter: Int8 = 0
-        print(isoPathTextField.stringValue)
-        if !(isoPathTextField.stringValue.hasSuffix(".iso")) {
+        print(ISOPathTextField.stringValue)
+        if !(ISOPathTextField.stringValue.hasSuffix(".iso")) {
             counter = 2
         }
         
@@ -269,15 +282,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             break
         default:
             let fileManager = FileManager.default
-            if fileManager.fileExists(atPath: isoPathTextField.stringValue) {
+            if fileManager.fileExists(atPath: ISOPathTextField.stringValue) {
                 /*
                  Input check done. All information is correct (probably)
                  */
                 setGUIEnabledState(false)
                 setProgress(5)
-                startDiskCreating(windowsISO: isoPathTextField.stringValue, partition: PickerPopUpButton.title)
+                startDiskCreating(windowsISO: ISOPathTextField.stringValue, partition: PickerPopUpButton.title)
             } else {
-                alertDialog(message: "Selected \"\(isoPathTextField.stringValue)\" does not exist.")
+                alertDialog(message: "Selected \"\(ISOPathTextField.stringValue)\" does not exist.")
             }
             
         }
@@ -363,7 +376,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             setProgress(8)
             
             let randomPartitionName = ("WINDY_\(randomString(length: 5))")
-            
+            print(hdiutilMountPath)
             formatPartition(volumeUDID, newPartitionName: randomPartitionName)
             setProgress(14)
             
@@ -397,18 +410,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     print(shell("\"\(wimlibPath)/wimlib-imagex\" split \"\(hdiutilMountPath)/sources/install.wim\" \"/Volumes/\(randomPartitionName)/sources/install.swm\"  \(installWimSize/2) --include-integrity"))
                 }
                 else {
-                    print("[DEBUG] >  File size is less than 4000MB (\(installWimSize)). Don't need to split install.wim.")
+                    print("[DEBUG] >  File size is less than 4000MB (\(installWimSize)MB). Don't need to split install.wim.")
                     print("[DEBUG] > Copying unmodified install.wim")
                     print(shell("rsync -av \"\(hdiutilMountPath)/sources/install.wim\" /Volumes/\(randomPartitionName)/sources/"))
                 }
                 
             }
-            setProgress(100)
-            setGUIEnabledState(true)
-            cancelButtonHiddenState(true)
-            DispatchQueue.main.async {
-                PickerPopUpButton.removeAllItems()
+            if (!isPreparingToKillShells){
+                DispatchQueue.main.async {
+                    switch OSVersionPickerPopUpButton.indexOfSelectedItem{
+                    case 1:
+                        setProgress(90)
+                        print("[DEBUG] > ISO Type: Windows 7. Installing EFI Bootloader...")
+                        let command =  "\"\(wimlibPath)/wimlib-imagex\" extract \"\(hdiutilMountPath)/sources/install.wim\" 1 /Windows/Boot/EFI/bootmgfw.efi --dest-dir=\"/Volumes/\(randomPartitionName)/efi/boot/\""
+                        print(shell(command))
+                        print(shell("mv /Volumes/\(randomPartitionName)/efi/boot/bootmgfw.efi /Volumes/\(randomPartitionName)/efi/boot/bootx64.efi"))
+                        print("Bootloader was installed.")
+                        break
+                        
+                    default:
+                        print("[DEBUG] > ISO Type: Windows 10 or newer. Bootloader is already installed.")
+                        break
+                    }
+                }
+                setProgress(100)
+                setGUIEnabledState(true)
+                cancelButtonHiddenState(true)
+                DispatchQueue.main.async {
+                    PickerPopUpButton.removeAllItems()
+                }
             }
+            
         }
         
     }

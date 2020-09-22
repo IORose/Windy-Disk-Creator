@@ -17,14 +17,16 @@
             <connections>
                 <outlet property="CancelButton" destination="EKn-mo-Aqp" id="gnt-xH-7M2"/>
                 <outlet property="ChooseButton" destination="GW0-K9-Xze" id="CyA-YY-pJd"/>
+                <outlet property="ISOPathTextField" destination="3dg-AY-69t" id="nHb-ZR-844"/>
+                <outlet property="OSVersionPickerPopUpButton" destination="59q-90-WSV" id="523-sp-Oqd"/>
+                <outlet property="OSVersionPickerTextLabel" destination="jy8-F3-CLU" id="5a8-C9-dth"/>
                 <outlet property="PickerPopUpButton" destination="qPV-NB-QAX" id="pzj-u2-O7R"/>
                 <outlet property="ProgressBar" destination="D7A-Ub-e1r" id="Uj3-L0-U32"/>
                 <outlet property="ShowOnlyExternalPartitionsCheckBox" destination="IUj-dI-qja" id="Fch-KO-a7V"/>
                 <outlet property="StartButton" destination="vka-7c-Rp7" id="dBc-Kt-3oB"/>
                 <outlet property="UpdateButton" destination="FO3-YZ-kA0" id="7PH-zA-EP6"/>
-                <outlet property="isoPathTextField" destination="3dg-AY-69t" id="nHb-ZR-844"/>
-                <outlet property="visualEffect" destination="2yP-W7-bQ0" id="qgP-q0-nr9"/>
-                <outlet property="window" destination="QvC-M9-y7g" id="6UX-kI-NXG"/>
+                <outlet property="VisualEffect" destination="2yP-W7-bQ0" id="qgP-q0-nr9"/>
+                <outlet property="Window" destination="QvC-M9-y7g" id="6UX-kI-NXG"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
@@ -69,15 +71,6 @@
                                 <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <subviews>
-                                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3dg-AY-69t">
-                                        <rect key="frame" x="20" y="319" width="358" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Windows.iso" bezelStyle="round" id="la1-8M-fDx">
-                                            <font key="font" usesAppearanceFont="YES"/>
-                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                        </textFieldCell>
-                                    </textField>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GW0-K9-Xze">
                                         <rect key="frame" x="385" y="316" width="76" height="23"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -135,12 +128,55 @@
                                         </connections>
                                     </button>
                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qPV-NB-QAX">
-                                        <rect key="frame" x="20" y="251" width="359" height="25"/>
+                                        <rect key="frame" x="18" y="251" width="363" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="T9h-mz-N2U">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="menu"/>
                                             <menu key="menu" id="oIh-kb-U6e"/>
+                                        </popUpButtonCell>
+                                    </popUpButton>
+                                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3dg-AY-69t">
+                                        <rect key="frame" x="20" y="317" width="358" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" placeholderString="Windows.iso" drawsBackground="YES" id="la1-8M-fDx">
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jy8-F3-CLU">
+                                        <rect key="frame" x="20" y="288" width="132" height="16"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Windows OS Version:" id="qig-ar-4JI">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZBE-FN-IgC">
+                                        <rect key="frame" x="378" y="85" width="95" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="[DEBUG]" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0q9-7g-Iao">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="OnClickDebugButton:" target="Voe-Tx-rLC" id="z5f-Id-I9q"/>
+                                        </connections>
+                                    </button>
+                                    <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="59q-90-WSV">
+                                        <rect key="frame" x="156" y="282" width="225" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <popUpButtonCell key="cell" type="push" title="Windows 10" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="LA7-uw-vnE" id="Osd-bq-mcg">
+                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="menu"/>
+                                            <menu key="menu" id="9RW-vc-dC3">
+                                                <items>
+                                                    <menuItem title="Windows 10" state="on" id="LA7-uw-vnE"/>
+                                                    <menuItem title="Windows 7" id="YIY-10-1ci"/>
+                                                </items>
+                                            </menu>
                                         </popUpButtonCell>
                                     </popUpButton>
                                 </subviews>
