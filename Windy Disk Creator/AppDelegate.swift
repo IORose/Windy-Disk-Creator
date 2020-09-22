@@ -8,7 +8,6 @@
 import Cocoa
 
 
-
 func getFileSize(path : String) -> UInt64{
     /*
      Getting file size. In our case, we are checking for install.wim size,
@@ -21,6 +20,7 @@ func getFileSize(path : String) -> UInt64{
         return 0
     }
 }
+
 func checkIfDirectoryExists(_ fullPath : String) -> Bool{
     let fileManager = FileManager.default
     var isDir : ObjCBool = false
@@ -62,7 +62,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let wimlibPath = "\(String(Bundle.main.executablePath!).dropLast(24))Resources/.libs"
     var pidList = [Int32]()
     
-    
     @IBOutlet weak var ISOPathTextField: NSTextField!
     @IBOutlet weak var StartButton: NSButton!
     @IBOutlet weak var UpdateButton: NSButton!
@@ -75,15 +74,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var VisualEffect: NSVisualEffectView!
     @IBOutlet weak var OSVersionPickerPopUpButton: NSPopUpButton!
     @IBOutlet weak var OSVersionPickerTextLabel: NSTextField!
-    
-    
-    @IBAction func OnClickDebugButton(_ sender: Any) {
-        print("[D-BUTTON] > \(OSVersionPickerPopUpButton.indexOfSelectedItem)")
-        let command =  "\"\(wimlibPath)/wimlib-imagex\" extract \"/Volumes/GSP1RMCENXVOL_RU_DVD/sources/install.wim\" 1 /Windows/Boot/EFI/bootmgfw.efi --dest-dir=\"/Users/winterboard/Desktop/mountdir/\""
-        print(command)
-        // print(shell(command))
-    }
-    
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         Window?.isMovableByWindowBackground = true
@@ -155,7 +145,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          */
         DispatchQueue.main.async { [self] in
             
-            filePickerWindowsISO.title                   = "Choose a Windows 10 ISO"
+            filePickerWindowsISO.title                   = "Choose a Windows ISO"
             filePickerWindowsISO.showsResizeIndicator    = false
             filePickerWindowsISO.showsHiddenFiles        = false
             filePickerWindowsISO.allowsMultipleSelection = false
@@ -193,6 +183,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             Window!.standardWindowButton(.closeButton)!.isEnabled = state
             OSVersionPickerPopUpButton.isEnabled = state
             OSVersionPickerTextLabel.isEnabled = state
+            
+            state ? (OSVersionPickerTextLabel.textColor = .black) : (OSVersionPickerTextLabel.textColor = .lightGray)
             
         }
     }
@@ -429,7 +421,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         break
                         
                     default:
-                        print("[DEBUG] > ISO Type: Windows 10 or newer. Bootloader is already installed.")
+                        print("[DEBUG] > ISO Type: Windows 8 or newer. Bootloader is already installed.")
                         break
                     }
                 }

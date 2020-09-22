@@ -154,26 +154,15 @@
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
-                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZBE-FN-IgC">
-                                        <rect key="frame" x="378" y="85" width="95" height="32"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="push" title="[DEBUG]" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="0q9-7g-Iao">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="OnClickDebugButton:" target="Voe-Tx-rLC" id="z5f-Id-I9q"/>
-                                        </connections>
-                                    </button>
                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="59q-90-WSV">
                                         <rect key="frame" x="156" y="282" width="225" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <popUpButtonCell key="cell" type="push" title="Windows 10" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="LA7-uw-vnE" id="Osd-bq-mcg">
+                                        <popUpButtonCell key="cell" type="push" title="Windows 10 / 8.1 / 8" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="LA7-uw-vnE" id="Osd-bq-mcg">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="menu"/>
                                             <menu key="menu" id="9RW-vc-dC3">
                                                 <items>
-                                                    <menuItem title="Windows 10" state="on" id="LA7-uw-vnE"/>
+                                                    <menuItem title="Windows 10 / 8.1 / 8" state="on" id="LA7-uw-vnE"/>
                                                     <menuItem title="Windows 7" id="YIY-10-1ci"/>
                                                 </items>
                                             </menu>
