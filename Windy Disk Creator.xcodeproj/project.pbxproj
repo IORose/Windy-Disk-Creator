@@ -11,6 +11,7 @@
 		D661D04D24F870370023BA89 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D661D04C24F870370023BA89 /* AppDelegate.swift */; };
 		D661D04F24F870390023BA89 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D661D04E24F870390023BA89 /* Assets.xcassets */; };
 		D661D05224F870390023BA89 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D661D05024F870390023BA89 /* MainMenu.xib */; };
+		D6FCD4E2251C7FFF002E73AC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D6FCD4E4251C7FFF002E73AC /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,8 @@
 		D661D05324F870390023BA89 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D661D05424F870390023BA89 /* Windy_Disk_Creator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Windy_Disk_Creator.entitlements; sourceTree = "<group>"; };
 		D6A7F9CF24FFBE0F00B4A29E /* libwim.15.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libwim.15.dylib; path = "Windy Disk Creator/wimlib/.libs/libwim.15.dylib"; sourceTree = "<group>"; };
+		D6FCD4DF251C7937002E73AC /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/MainMenu.strings; sourceTree = "<group>"; };
+		D6FCD4E3251C7FFF002E73AC /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +64,7 @@
 				D661D05024F870390023BA89 /* MainMenu.xib */,
 				D661D05324F870390023BA89 /* Info.plist */,
 				D661D05424F870390023BA89 /* Windy_Disk_Creator.entitlements */,
+				D6FCD4E4251C7FFF002E73AC /* Localizable.strings */,
 			);
 			path = "Windy Disk Creator";
 			sourceTree = "<group>";
@@ -114,6 +118,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = D661D04024F870370023BA89;
 			productRefGroup = D661D04A24F870370023BA89 /* Products */;
@@ -131,6 +136,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D649118924FFCACB00426BEB /* .libs in Resources */,
+				D6FCD4E2251C7FFF002E73AC /* Localizable.strings in Resources */,
 				D661D04F24F870390023BA89 /* Assets.xcassets in Resources */,
 				D661D05224F870390023BA89 /* MainMenu.xib in Resources */,
 			);
@@ -154,8 +160,17 @@
 			isa = PBXVariantGroup;
 			children = (
 				D661D05124F870390023BA89 /* Base */,
+				D6FCD4DF251C7937002E73AC /* ru */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		D6FCD4E4251C7FFF002E73AC /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D6FCD4E3251C7FFF002E73AC /* ru */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -165,6 +180,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -226,6 +242,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

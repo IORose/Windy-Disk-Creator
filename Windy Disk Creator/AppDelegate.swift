@@ -7,6 +7,11 @@
 
 import Cocoa
 
+extension String {
+    var localized: String {
+        return NSLocalizedString(self, comment:"")
+    }
+}
 
 func getFileSize(path : String) -> UInt64{
     /*
@@ -62,22 +67,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let wimlibPath = "\(String(Bundle.main.executablePath!).dropLast(24))Resources/.libs"
     var pidList = [Int32]()
     
-    @IBOutlet weak var ISOPathTextField: NSTextField!
-    @IBOutlet weak var StartButton: NSButton!
-    @IBOutlet weak var UpdateButton: NSButton!
-    @IBOutlet weak var ChooseButton: NSButton!
-    @IBOutlet weak var ProgressBar: NSProgressIndicator!
-    @IBOutlet weak var ShowOnlyExternalPartitionsCheckBox: NSButton!
-    @IBOutlet weak var Window: NSWindow!
-    @IBOutlet weak var CancelButton: NSButton!
-    @IBOutlet weak var PickerPopUpButton: NSPopUpButton!
-    @IBOutlet weak var VisualEffect: NSVisualEffectView!
-    @IBOutlet weak var OSVersionPickerPopUpButton: NSPopUpButton!
-    @IBOutlet weak var OSVersionPickerTextLabel: NSTextField!
+    @IBOutlet weak var isoPathTextField: NSTextField!
+    @IBOutlet weak var startButton: NSButton!
+    @IBOutlet weak var updateButton: NSButton!
+    @IBOutlet weak var chooseButton: NSButton!
+    @IBOutlet weak var progressBar: NSProgressIndicator!
+    @IBOutlet weak var showOnlyExternalPartitionsCheckBox: NSButton!
+    @IBOutlet weak var window: NSWindow!
+    @IBOutlet weak var cancelButton: NSButton!
+    @IBOutlet weak var pickerPopUpButton: NSPopUpButton!
+    @IBOutlet weak var visualEffect: NSVisualEffectView!
+    @IBOutlet weak var osVersionPickerPopUpButton: NSPopUpButton!
+    @IBOutlet weak var osVersionPickerTextLabel: NSTextField!
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        Window?.isMovableByWindowBackground = true
-        Window?.contentView = VisualEffect
+        window?.isMovableByWindowBackground = true
+        window?.contentView = visualEffect
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -110,7 +115,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func setCancelButtonHiddenState(_ state : Bool) {
         DispatchQueue.main.async { [self] in
-            CancelButton.isHidden = state
+            cancelButton.isHidden = state
         }
     }
     
@@ -119,7 +124,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          Changing the ProgressBar progress
          */
         DispatchQueue.main.async {
-            self.ProgressBar.doubleValue = progress
+            self.progressBar.doubleValue = progress
         }
     }
     
@@ -129,7 +134,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          */
         DispatchQueue.main.async {
             let alert = NSAlert()
-            alert.addButton(withTitle: "Close")
+            alert.addButton(withTitle: "Close".localized)
             alert.messageText = message
             alert.alertStyle = .critical
             alert.runModal()
@@ -146,7 +151,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          */
         DispatchQueue.main.async { [self] in
             
-            filePickerWindowsISO.title                   = "Choose a Windows ISO"
             filePickerWindowsISO.showsResizeIndicator    = false
             filePickerWindowsISO.showsHiddenFiles        = false
             filePickerWindowsISO.allowsMultipleSelection = false
@@ -159,7 +163,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 
                 if (result != nil) {
                     let path : String = result!.path
-                    ISOPathTextField.stringValue = path
+                    isoPathTextField.stringValue = path
                 }
                 
             } else {
@@ -175,17 +179,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          */
         DispatchQueue.main.async { [self] in
             
-            ChooseButton.isEnabled = state
-            UpdateButton.isEnabled = state
-            StartButton.isEnabled = state
-            PickerPopUpButton.isEnabled = state
-            ISOPathTextField.isEnabled = state
-            ShowOnlyExternalPartitionsCheckBox.isEnabled = state
-            Window!.standardWindowButton(.closeButton)!.isEnabled = state
-            OSVersionPickerPopUpButton.isEnabled = state
-            OSVersionPickerTextLabel.isEnabled = state
+            chooseButton.isEnabled = state
+            updateButton.isEnabled = state
+            startButton.isEnabled = state
+            pickerPopUpButton.isEnabled = state
+            isoPathTextField.isEnabled = state
+            showOnlyExternalPartitionsCheckBox.isEnabled = state
+            window!.standardWindowButton(.closeButton)!.isEnabled = state
+            osVersionPickerPopUpButton.isEnabled = state
+            osVersionPickerTextLabel.isEnabled = state
             
-            state ? (OSVersionPickerTextLabel.textColor = .black) : (OSVersionPickerTextLabel.textColor = .lightGray)
+            state ? (osVersionPickerTextLabel.textColor = .black) : (osVersionPickerTextLabel.textColor = .lightGray)
             
         }
     }
@@ -195,7 +199,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setCancelButtonHiddenState(true)
         setProgress(0)
         DispatchQueue.main.async {
-            self.PickerPopUpButton.removeAllItems()
+            self.pickerPopUpButton.removeAllItems()
         }
     }
     @IBAction func OnClickExternalPartitionsPickerUpdateButton(_ sender: Any) {
@@ -203,7 +207,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          OnClick event on "Update" button.
          It's using for updating mounted Internal/External partitions.
          */
-        PickerPopUpButton.removeAllItems()
+        pickerPopUpButton.removeAllItems()
         do {
             /*
              Getting mounted partitions in /Volumes/
@@ -216,7 +220,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
              */
             
             var rawDiskUtilOutput : String
-            if (ShowOnlyExternalPartitionsCheckBox.state == .on){
+            if (showOnlyExternalPartitionsCheckBox.state == .on){
                 rawDiskUtilOutput = shell("diskutil list -plist external physical")
             }
             else{
@@ -226,7 +230,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print(unfilteredPartitionsArray)
             for unfilteredSinglePartition in unfilteredPartitionsArray{
                 if(rawDiskUtilOutput).contains("<string>/Volumes/\(unfilteredSinglePartition)</string>"){
-                    PickerPopUpButton.addItem(withTitle: unfilteredSinglePartition)
+                    pickerPopUpButton.addItem(withTitle: unfilteredSinglePartition)
                     print("[DEBUG] > Adding (\(unfilteredSinglePartition)) partition to picker.")
                 }
                 
@@ -237,12 +241,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print("[ERROR] > Something went wrong: \(error)")
         }
         
-        if (!PickerPopUpButton.itemArray.isEmpty) {
-            PickerPopUpButton.isEnabled = true
+        if (!pickerPopUpButton.itemArray.isEmpty) {
+            pickerPopUpButton.isEnabled = true
         }
         else{
-            PickerPopUpButton.isEnabled = false
-            PickerPopUpButton.addItem(withTitle: "No Partitions were detected")
+            pickerPopUpButton.isEnabled = false
+            pickerPopUpButton.addItem(withTitle: "No Partitions were detected".localized)
         }
         
     }
@@ -254,36 +258,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
          Checking correctness of input data.
          */
         var counter: Int8 = 0
-        print(ISOPathTextField.stringValue)
-        if !(ISOPathTextField.stringValue.hasSuffix(".iso")) {
+        print(isoPathTextField.stringValue)
+        if !(isoPathTextField.stringValue.hasSuffix(".iso")) {
             counter = 2
         }
         
-        if (PickerPopUpButton.title == "No Partitions were detected" || PickerPopUpButton.title.isEmpty) {
+        if (pickerPopUpButton.title == "No Partitions were detected".localized || pickerPopUpButton.title.isEmpty) {
             counter+=1
         }
         
         switch counter {
         case 2:
-            alertDialog(message: "Windows ISO was not selected.")
+            alertDialog(message: "Windows ISO was not selected.".localized)
             break
         case 1:
-            alertDialog(message: "No partition was selected.")
+            alertDialog(message: "No partition was selected.".localized)
             break
         case 3:
-            alertDialog(message: "No options were selected. Please select a Windows.iso and an External Partition.")
+            alertDialog(message: "No options were selected. Please select a Windows.iso and an External Partition.".localized)
             break
         default:
             let fileManager = FileManager.default
-            if fileManager.fileExists(atPath: ISOPathTextField.stringValue) {
+            if fileManager.fileExists(atPath: isoPathTextField.stringValue) {
                 /*
                  Input check done. All information is correct (probably)
                  */
                 setGUIEnabledState(false)
                 setProgress(5)
-                startDiskCreating(windowsISO: ISOPathTextField.stringValue, partition: PickerPopUpButton.title)
+                startDiskCreating(windowsISO: isoPathTextField.stringValue, partition: pickerPopUpButton.title)
             } else {
-                alertDialog(message: "Selected \"\(ISOPathTextField.stringValue)\" does not exist.")
+                alertDialog(message: "\("Windows ISO at path: ".localized)\"\(isoPathTextField.stringValue)\"\(" does not exist. Check the entered path and try again.".localized)")
             }
             
         }
@@ -341,7 +345,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             else{
                 print("[ERROR] > Can't mount .iso image. It may be corrupted or its just a macOS bug (detected in Big Sur Beta 6).")
-                alertDialog(message: "An Error was occured when trying to mount .iso image. It can be related to corrupted image or to macOS Bug.")
+                alertDialog(message: "\("An Error was occured when trying to mount .iso image. It can be related to corrupted image or to macOS Bug. If you sure that your ISO image is correct, then try to mount it via Terminal:\n\n".localized)\("sudo hdiutil attach \"\(windowsISO)\" ")\("\n\nAnd then try again.".localized)")
+
                 onInterruptDiskCreating()
                 return
                 
@@ -352,7 +357,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let windowsPartitionSize = Int64(getStringBetween(shell("diskutil info \"\(hdiutilMountPath)\" | grep \'Volume Total Space:\'"), firstPart: " (", secondPart: " Bytes)"))!
             if(!checkIfDirectoryExists("/Volumes/\(partition)")){
                 print("[DEBUG] > Partition was disconnected. Aborting...")
-                alertDialog(message: "Selected partition was disconnected. Aborting the operation.")
+                alertDialog(message: "Selected partition was disconnected. Aborting the operation.".localized)
                 onInterruptDiskCreating()
                 return
             }
@@ -415,7 +420,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
              */
             if (!isPreparingToKillShells){
                 DispatchQueue.main.async {
-                    if (OSVersionPickerPopUpButton.indexOfSelectedItem == 1){
+                    if (osVersionPickerPopUpButton.indexOfSelectedItem == 1){
                         setProgress(90)
                         print("[DEBUG] > ISO Type: Windows 7. Installing EFI Bootloader...")
                         let command =  "\"\(wimlibPath)/wimlib-imagex\" extract \"\(hdiutilMountPath)/sources/install.wim\" 1 /Windows/Boot/EFI/bootmgfw.efi --dest-dir=\"/Volumes/\(randomPartitionName)/efi/boot/\""
@@ -432,9 +437,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             setGUIEnabledState(true)
             setCancelButtonHiddenState(true)
             DispatchQueue.main.async {
-                PickerPopUpButton.removeAllItems()
+                pickerPopUpButton.removeAllItems()
             }
-            
+            alertDialog(message: "Done.".localized)
             
         }
         

@@ -1,0 +1,31 @@
+/* Class = "NSMenuItem"; title = "Quit Windy Disk Creator"; ObjectID = "4sb-4s-VLi"; */
+"4sb-4s-VLi.title" = "Завершить Windy Disk Creator";
+
+/* Class = "NSMenuItem"; title = "About Windy Disk Creator"; ObjectID = "5kV-Vb-QxS"; */
+"5kV-Vb-QxS.title" = "Информация об Windy Disk Creator";
+
+/* Class = "NSMenuItem"; title = "Windows 10 / 8.1 / 8"; ObjectID = "LA7-uw-vnE"; */
+"LA7-uw-vnE.title" = "Windows 10 / 8.1 / 8";
+
+/* Class = "NSButtonCell"; title = "Update"; ObjectID = "RQj-WG-zf4"; */
+"RQj-WG-zf4.title" = "Обновить";
+
+/* Class = "NSButtonCell"; title = "Choose"; ObjectID = "Twe-8m-up7"; */
+"Twe-8m-up7.title" = "Выбрать";
+
+/* Class = "NSButtonCell"; title = "Show only External partitions"; ObjectID = "U8h-pn-Rwy"; */
+"U8h-pn-Rwy.title" = "Отображать разделы только с Внешних устройств.";
+
+/* Class = "NSButtonCell"; title = "START"; ObjectID = "hlm-k7-cDK"; */
+"hlm-k7-cDK.title" = "Начать";
+
+/* Class = "NSButtonCell"; title = "[CANCEL]"; ObjectID = "iz5-Dy-rjE"; */
+"iz5-Dy-rjE.title" = "[ОТМЕНА]";
+
+/* Class = "NSTextFieldCell"; placeholderString = "Windows.iso"; ObjectID = "la1-8M-fDx"; */
+"la1-8M-fDx.placeholderString" = "Windows.iso";
+
+/* Class = "NSTextFieldCell"; title = "Windows OS Version:"; ObjectID = "qig-ar-4JI"; */
+"qig-ar-4JI.title" = "Версия Windows:";
+
+//No options were selected. Please select a Windows.iso and an External Partition.

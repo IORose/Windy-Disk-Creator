@@ -1,0 +1,29 @@
+/* 
+  Localizable.strings
+  Windy Disk Creator
+
+  Created by WinterBoard on 24.09.2020.
+  
+*/
+
+"Close" = "Закрыть";
+
+"No Partitions were detected" = "Разделы не найдены.";
+
+"Windows ISO was not selected." = "Образ Windows в ISO формате не был выбран.";
+
+"No partition was selected." = "Раздел не был выбран.";
+
+"No options were selected. Please select a Windows.iso and an External Partition." = "Выберите образ Windows в ISO формате и раздел.";
+
+"Windows ISO at path: " = "Образа Windows в ISO формате по пути: ";
+
+" does not exist. Check the entered path and try again." = " не существует. Проверьте введённый путь и попробуйте снова.";
+
+"An Error was occured when trying to mount .iso image. It can be related to corrupted image or to macOS Bug. If you sure that your ISO image is correct, then try to mount it via Terminal:\n\n" = "Возникла ошибка при попытке смонтировать .ISO образ. Возможно, образ поврежден или это баг системы. Если Вы уверены, что выбрали правильный образ - попробуйте смонтировать его через Терминал:\n\n";
+
+"\n\nAnd then try again." = "\n\nИ затем попробуйте снова.";
+
+"Selected partition was disconnected. Aborting the operation." = "Выбранный раздел был отключён. Отмена операции.";
+
+"Done." = "Готово.";
