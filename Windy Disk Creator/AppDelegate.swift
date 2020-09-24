@@ -81,7 +81,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
-        print("[DEBUG] Exiting...")
+        print("[DEBUG] Interrupting processes and exiting...")
+        stopBackgroundTransfering()
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -107,7 +108,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     
-    func cancelButtonHiddenState(_ state : Bool) {
+    func setCancelButtonHiddenState(_ state : Bool) {
         DispatchQueue.main.async { [self] in
             CancelButton.isHidden = state
         }
@@ -191,7 +192,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func onInterruptDiskCreating() {
         setGUIEnabledState(true)
-        cancelButtonHiddenState(true)
+        setCancelButtonHiddenState(true)
         setProgress(0)
         DispatchQueue.main.async {
             self.PickerPopUpButton.removeAllItems()
@@ -335,7 +336,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 if let range = hdiutilMountPath.range(of: "/Volumes/") {
                     hdiutilMountPath = String(hdiutilMountPath.dropFirst(hdiutilMountPath.distance(from: hdiutilMountPath.startIndex, to: range.lowerBound)))
                 }
-                cancelButtonHiddenState(false)
+                setCancelButtonHiddenState(false)
                 
             }
             else{
@@ -408,30 +409,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
                 
             }
+            /*
+             Checking Windows Version ( 10 / 8.1 / 8 / 7 ). If Windows 7 has been choosen,
+             then bootmgfw.efi will be extracted from install.wim, then renamed (bootmgfw.efi -> bootx64.efi) and placed into /Volumes/partition/efi/boot/ directory.
+             */
             if (!isPreparingToKillShells){
                 DispatchQueue.main.async {
-                    switch OSVersionPickerPopUpButton.indexOfSelectedItem{
-                    case 1:
+                    if (OSVersionPickerPopUpButton.indexOfSelectedItem == 1){
                         setProgress(90)
                         print("[DEBUG] > ISO Type: Windows 7. Installing EFI Bootloader...")
                         let command =  "\"\(wimlibPath)/wimlib-imagex\" extract \"\(hdiutilMountPath)/sources/install.wim\" 1 /Windows/Boot/EFI/bootmgfw.efi --dest-dir=\"/Volumes/\(randomPartitionName)/efi/boot/\""
                         print(shell(command))
                         print(shell("mv /Volumes/\(randomPartitionName)/efi/boot/bootmgfw.efi /Volumes/\(randomPartitionName)/efi/boot/bootx64.efi"))
                         print("Bootloader was installed.")
-                        break
-                        
-                    default:
+                    }
+                    else {
                         print("[DEBUG] > ISO Type: Windows 8 or newer. Bootloader is already installed.")
-                        break
                     }
                 }
             }
-                setProgress(100)
-                setGUIEnabledState(true)
-                cancelButtonHiddenState(true)
-                DispatchQueue.main.async {
-                    PickerPopUpButton.removeAllItems()
-                }
+            setProgress(100)
+            setGUIEnabledState(true)
+            setCancelButtonHiddenState(true)
+            DispatchQueue.main.async {
+                PickerPopUpButton.removeAllItems()
+            }
             
             
         }
