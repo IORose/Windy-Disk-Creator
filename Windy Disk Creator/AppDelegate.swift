@@ -342,6 +342,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
                 setCancelButtonHiddenState(false)
                 
+                if (checkIfDirectoryExists("\(hdiutilMountPath)/efi/boot")) {
+                    
+                }
+                DispatchQueue.main.async {
+                checkIfDirectoryExists("\(hdiutilMountPath.dropLast())/efi/boot") ? (osVersionPickerPopUpButton.selectItem(at: 1)) : (osVersionPickerPopUpButton.selectItem(at: 2))
+                }
             }
             else{
                 print("[ERROR] > Can't mount .iso image. It may be corrupted or its just a macOS bug (detected in Big Sur Beta 6).")
@@ -420,13 +426,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
              */
             if (!isPreparingToKillShells){
                 DispatchQueue.main.async {
-                    if (osVersionPickerPopUpButton.indexOfSelectedItem == 1){
+                    if (osVersionPickerPopUpButton.indexOfSelectedItem == 2){
                         setProgress(90)
                         print("[DEBUG] > ISO Type: Windows 7. Installing EFI Bootloader...")
                         let command =  "\"\(wimlibPath)/wimlib-imagex\" extract \"\(hdiutilMountPath)/sources/install.wim\" 1 /Windows/Boot/EFI/bootmgfw.efi --dest-dir=\"/Volumes/\(randomPartitionName)/efi/boot/\""
                         print(shell(command))
                         print(shell("mv /Volumes/\(randomPartitionName)/efi/boot/bootmgfw.efi /Volumes/\(randomPartitionName)/efi/boot/bootx64.efi"))
-                        print("Bootloader was installed.")
+                        print("[DEBUG] Bootloader has been installed.")
                     }
                     else {
                         print("[DEBUG] > ISO Type: Windows 8 or newer. Bootloader is already installed.")

@@ -157,12 +157,13 @@
                                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="59q-90-WSV">
                                         <rect key="frame" x="156" y="257" width="225" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <popUpButtonCell key="cell" type="push" title="Windows 10 / 8.1 / 8" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="LA7-uw-vnE" id="Osd-bq-mcg">
+                                        <popUpButtonCell key="cell" type="push" title="Automatic detection" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="uU0-4x-EZH" id="Osd-bq-mcg">
                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="menu"/>
                                             <menu key="menu" id="9RW-vc-dC3">
                                                 <items>
-                                                    <menuItem title="Windows 10 / 8.1 / 8" state="on" id="LA7-uw-vnE"/>
+                                                    <menuItem title="Automatic detection" state="on" id="uU0-4x-EZH"/>
+                                                    <menuItem title="Windows 10 / 8.1 / 8" id="LA7-uw-vnE"/>
                                                     <menuItem title="Windows 7" id="YIY-10-1ci"/>
                                                 </items>
                                             </menu>
