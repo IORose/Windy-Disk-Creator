@@ -2,8 +2,6 @@
 
 >![Windy Disk Creator Alpha](https://i.imgur.com/lJDhgtI.png)
 
-This application is the Alpha version of Software, which is currently in active development.
-
     Requirements:
         * Mac OS X Yosemite 10.10 and up.
         * Windows 10 / 8.1 / 8 / 7 .iso Image.
