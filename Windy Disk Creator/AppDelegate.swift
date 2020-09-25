@@ -198,8 +198,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setGUIEnabledState(true)
         setCancelButtonHiddenState(true)
         setProgress(0)
-        DispatchQueue.main.async {
-            self.pickerPopUpButton.removeAllItems()
+        DispatchQueue.main.async { [self] in
+            pickerPopUpButton.removeAllItems()
+            osVersionPickerPopUpButton.selectItem(at: 0)
         }
     }
     @IBAction func OnClickExternalPartitionsPickerUpdateButton(_ sender: Any) {
@@ -338,27 +339,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 setProgress(6)
                 
                 if let range = hdiutilMountPath.range(of: "/Volumes/") {
-                    hdiutilMountPath = String(hdiutilMountPath.dropFirst(hdiutilMountPath.distance(from: hdiutilMountPath.startIndex, to: range.lowerBound)))
+                    hdiutilMountPath = String((hdiutilMountPath.dropFirst(hdiutilMountPath.distance(from: hdiutilMountPath.startIndex, to: range.lowerBound))).dropLast())
                 }
                 setCancelButtonHiddenState(false)
                 
-                if (checkIfDirectoryExists("\(hdiutilMountPath)/efi/boot")) {
-                    
-                }
                 DispatchQueue.main.async {
-                checkIfDirectoryExists("\(hdiutilMountPath.dropLast())/efi/boot") ? (osVersionPickerPopUpButton.selectItem(at: 1)) : (osVersionPickerPopUpButton.selectItem(at: 2))
+                    if (osVersionPickerPopUpButton.indexOfSelectedItem == 0){
+                        checkIfDirectoryExists("\(hdiutilMountPath)/efi/boot") ? (osVersionPickerPopUpButton.selectItem(at: 1)) : (osVersionPickerPopUpButton.selectItem(at: 2))
+                        print("[DEBUG] > Automatic Windows OS version detection: \(osVersionPickerPopUpButton.title)")
+                    }
                 }
             }
             else{
                 print("[ERROR] > Can't mount .iso image. It may be corrupted or its just a macOS bug (detected in Big Sur Beta 6).")
                 alertDialog(message: "\("An Error was occured when trying to mount .iso image. It can be related to corrupted image or to macOS Bug. If you sure that your ISO image is correct, then try to mount it via Terminal:\n\n".localized)\("sudo hdiutil attach \"\(windowsISO)\" ")\("\n\nAnd then try again.".localized)")
-
+                
                 onInterruptDiskCreating()
                 return
                 
             }
-            
-            hdiutilMountPath = String(hdiutilMountPath.dropLast())
             
             let windowsPartitionSize = Int64(getStringBetween(shell("diskutil info \"\(hdiutilMountPath)\" | grep \'Volume Total Space:\'"), firstPart: " (", secondPart: " Bytes)"))!
             if(!checkIfDirectoryExists("/Volumes/\(partition)")){
